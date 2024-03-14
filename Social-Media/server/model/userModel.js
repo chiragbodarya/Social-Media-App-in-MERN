@@ -21,16 +21,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    // profile_image: {
-    //     type: String,
-    //     require: true
-    // },
-    // follow_list: {
-    //     type: Array,
-    // },
-    // follower_list: {
-    //     type: Array,
-    // },
+    profile_image: {
+        type: String,
+        require: true
+    },
+    follow_list: {
+        type: Array,
+    },
+    follower_list: {
+        type: Array,
+    },
     // like_post_list: [{
     //     post_by: {
     //         type: String

@@ -11,13 +11,13 @@ import ChangePassword from "./Pages/Auth/Password/ChangePassword";
 import Home from "./Pages/index";
 import NotFoundPage from "./Pages/NotFoundPage";
 
-// axios.defaults.baseURL = "http://127.0.0.1:5000/";
+// import UserContextProvider from "../context/UserContext";
+
 axios.defaults.baseURL = "http://localhost:5000/";
-// axios.defaults.withCredentials = true;
 
 const App = () => {
   return (
-    <>
+    // <UserContextProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -33,7 +33,7 @@ const App = () => {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
-    </>
+    // </UserContextProvider>
   );
 };
 

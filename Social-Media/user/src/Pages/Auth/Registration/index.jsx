@@ -1,11 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Img from "../../../assets/img/registration.png";
 import * as Yup from "yup";
 
 const index = () => {
+  const navigate = useNavigate();
   const validationSchema = Yup.object({
     firstname: Yup.string()
       .max(15, "must be 15 characters or less")
@@ -32,7 +33,7 @@ const index = () => {
   const register = async (newUser) => {
     const { firstname, lastname, username, email, password, confirmpassword } =
       newUser;
-    console.log(newUser);
+    // console.log(newUser);
     try {
       const newUser = await axios.post("/registration", {
         firstname,
@@ -47,6 +48,7 @@ const index = () => {
           alert(newUser.error);
         } else {
           alert("registeer successful!");
+          navigate("/login");
         }
       } catch (error) {
         console.log("newUser", error);

@@ -1,30 +1,38 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Img from "../../../assets/img/login.png";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
 
 const index = () => {
-  const [oldUser, setOldUser] = useState({
-    email: "",
-    password: "",
+  const navigate = useNavigate();
+  const validationSchema = Yup.object({
+    email: Yup.string().email("Invalid email address").required("Required"),
+    password: Yup.string().required("Required"),
   });
 
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const val = e.target.value;
-    setOldUser({ ...oldUser, [name]: val });
+  const login = async (values) => {
+    const { email, password } = values;
+    // console.log("email:", email);
+    // console.log("password:", password);
+    try {
+      const oldUser = await axios.post("/login", {
+        email,
+        password,
+      });
+      // console.log("oldUser", oldUser);
+      if (oldUser.data.error) {
+        alert(oldUser.data.error);
+      } else {
+        alert(oldUser.data.message);
+        navigate("/");
+      }
+    } catch (error) {
+      alert.error("Login failed. Please try again.");
+      alert("");
+    }
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(oldUser);
-    // login();
-  };
-
-  // const login = () => {
-  //   axios
-  //     .post("http://localhost:3001/login", oldUser)
-  //     .then((res) => alert(res.data.message));
-  // };
 
   return (
     <>
@@ -41,48 +49,57 @@ const index = () => {
             <div className="w-[90%] md:w-[50%]">
               <div className="border-1 border-[#000] rounded-md py-4 px-10 min-w-fit w-full max-w-[500px] mx-auto">
                 <p className="text-center text-2xl font-bold">Login</p>
-                <form
-                  action=""
-                  className="flex flex-col items-start"
-                  onSubmit={handleSubmit}
+                <Formik
+                  initialValues={{
+                    email: "",
+                    password: "",
+                  }}
+                  validationSchema={validationSchema}
+                  onSubmit={login}
                 >
-                  <div className="flex flex-col w-full pt-4">
-                    <label name="email" className="text-lg font-semibold">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Enter Email Address"
-                      className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
-                      required
-                      value={oldUser?.email}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="flex flex-col w-full pt-4">
-                    <label name="password" className="text-lg font-semibold">
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      name="password"
-                      placeholder="Enter password"
-                      className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
-                      required
-                      value={oldUser?.password}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="flex flex-col w-full pt-6">
-                    <button
-                      type="submit"
-                      className="bg-blue-400 py-2 rounded-md text-me font-semibold"
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </form>
+                  <Form action="" className="flex flex-col items-start">
+                    <div className="flex flex-col w-full pt-4">
+                      <label name="email" className="text-lg font-semibold">
+                        Email
+                      </label>
+                      <Field
+                        type="email"
+                        name="email"
+                        placeholder="Enter Email Address"
+                        className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
+                      />
+                      <ErrorMessage
+                        name="email"
+                        component="div"
+                        className="text-red-500 text-sm"
+                      />
+                    </div>
+                    <div className="flex flex-col w-full pt-4">
+                      <label name="password" className="text-lg font-semibold">
+                        Password
+                      </label>
+                      <Field
+                        type="password"
+                        name="password"
+                        placeholder="Enter password"
+                        className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
+                      />
+                      <ErrorMessage
+                        name="password"
+                        component="div"
+                        className="text-red-500 text-sm"
+                      />
+                    </div>
+                    <div className="flex flex-col w-full pt-6">
+                      <button
+                        type="submit"
+                        className="bg-blue-400 py-2 rounded-md text-me font-semibold"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </Form>
+                </Formik>
                 <div className="flex justify-between">
                   <Link to="/registration" className="text-blue-800">
                     Creat a new Account !
