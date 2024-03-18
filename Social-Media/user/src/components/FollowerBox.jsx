@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import Profile from "../assets/profile-img.png";
+import { UserContext } from "../context/UserContext";
 
 const FollowerBox = () => {
+  const { user } = useContext(UserContext);
   return (
     <div>
       <main className="bg-gray-100 bg-opacity-25">
@@ -17,7 +19,7 @@ const FollowerBox = () => {
           <div className="w-[67%] md:w-[50%]">
             <div className="md:flex md:flex-wrap md:items-center md:mb-4">
               <h2 className="text-3xl inline-block font-light md:mr-2 mb-2 sm:mb-0">
-                User Name
+                {!!user && <span className="capitalize">{user.username}</span>}
               </h2>
             </div>
 
@@ -43,7 +45,9 @@ const FollowerBox = () => {
             </ul>
 
             <div className="hidden md:block pb-2">
-              <h1 className="font-semibold">User Name</h1>
+              <h1 className="font-semibold">
+                {!!user && <span className="capitalize">{user.firstname}</span>}
+              </h1>
               <p>
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed
                 veritatis hic neque.

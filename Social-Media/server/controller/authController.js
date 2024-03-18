@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 
 
 
-
 //register controller
 const userRagister = async (req, res) => {
     try {
@@ -44,75 +43,45 @@ const userRagister = async (req, res) => {
 };
 
 
-let LoginToken;
 // login controller
 const userLogin = async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email: email });
+        // req.send(user)
         if (user) {
             const match = await comparePassword(password, user.password)
             if (match) {
-                // create token
-                // jwt.sign({ email: user.email, id: user._id, username: user.username }, process.env.JWT_SECRET, {},
-                //     (err, token) => {
-                //         if (err) {
-                //             console.error("Error creating token:", err);
-                //             return res.status(500).json({ error: "Internal server error" });
-                //         }
-                //         globalToken = token;
-                //         // Set the token in a cookie
-                //         res.cookie('jwt-token', token);
-                //         // Send a single response with token and message
-                //         res.json({ message: 'Login successful', token });
-                //     });
-                res.json({ message: 'login succesfull' })
+                // Generate JWT token
+                const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET);
+                res.status(200).json({ message: 'login succesfull', token: token, user: user })
+                console.log(user)
             } else {
-                res.json({ error: 'Password is incorrect' });
+                res.status(401).json({ error: 'Password is incorrect' });
             }
         } else {
-            res.json({ error: 'User not found' });
+            res.status(404).json({ error: 'User not found' });
         }
     } catch (error) {
-        console.error("Error logging in:", error);
-        res.json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Internal server error' });
     }
 }
 
 
 
-
 //this code is use to get profile
-// const getProfile = (req, res) => {
-//     const token = LoginToken;
-//     res.json(token);
-//     // res.json({ message: 'this is a token', token });
-//     if (token) {
-//         jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
-//             if (err) {
-//                 console.error("Error verifying token:", err);
-//                 return res.status(401).json({ error: "Unauthorized" });
-//             }
-//             res.json(user);
-//         });
-//         console.log("verify");
-//     } else {
-//         res.json(null);
-//         console.log("nullllll");
-//     }
-// };
-// const getProfile = (req, res) => {
-//     const { token } = req.cookies['jwt-token'];
-//     try {
-//         // Some logic to get the user's profile
-//         const profileData = {
-//             message: 'this is a token'
-//         };
-//         res.status(200).json(profileData); // Send response with status and JSON data
-//     } catch (error) {
-//         console.error("Error getting profile:", error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// }
+const getProfile = (req, res) => {
+    // Extract user information from JWT token
+    const { id, firstname, lastname, username, email, password } = req.user;
+    console.log(req.user)
+    // You can use the extracted user information to personalize the profile page
+    res.json({ id, username, message: 'Profile Page' });
+};
 
-module.exports = { userRagister, userLogin };
+
+//this code is change password
+const changePassword = (req, res) => {
+    const token =
+}
+
+module.exports = { userRagister, userLogin, getProfile, changePassword };

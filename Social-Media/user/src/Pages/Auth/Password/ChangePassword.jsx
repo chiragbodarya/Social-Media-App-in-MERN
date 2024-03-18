@@ -1,22 +1,32 @@
 import React, { useState } from "react";
 import Img from "../../../assets/img/login-img.png";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import * as Yup from "yup";
+import { Link } from "react-router-dom";
 
 const ChangePassword = () => {
-  const [password, setPassword] = useState({
-    old_password: "",
-    new_password: "",
-    new_confirmpassword: "",
+  const validationSchema = Yup.object({
+    old_password: Yup.string()
+      .required("Required")
+      .min(8, "Must be 8 characters or more")
+      .matches(/[a-z]+/, "One lowercase character")
+      .matches(/[A-Z]+/, "One uppercase character")
+      .matches(/[@$!%*#?&]+/, "One special character")
+      .matches(/\d+/, "One number"),
+    new_password: Yup.string()
+      .required("Required")
+      .min(8, "Must be 8 characters or more")
+      .matches(/[a-z]+/, "One lowercase character")
+      .matches(/[A-Z]+/, "One uppercase character")
+      .matches(/[@$!%*#?&]+/, "One special character")
+      .matches(/\d+/, "One number"),
+    new_confirmpassword: Yup.string()
+      .oneOf([Yup.ref("new_password"), null], "Passwords must match")
+      .required("Required"),
   });
 
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const val = e.target.value;
-    setPassword({ ...password, [name]: val });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(password);
+  const hendleChangePassword = () => {
+    console.log("password is change");
   };
 
   return (
@@ -36,71 +46,90 @@ const ChangePassword = () => {
                 <p className="text-center text-2xl font-bold">
                   Change Password
                 </p>
-                <form
-                  action=""
-                  className="flex flex-col items-start"
-                  onSubmit={handleSubmit}
+                <Formik
+                  initialValues={{
+                    old_password: "",
+                    new_password: "",
+                    new_confirmpassword: "",
+                  }}
+                  validationSchema={validationSchema}
+                  onSubmit={hendleChangePassword}
                 >
-                  <div className="flex flex-col w-full pt-4">
-                    <label
-                      name="old_password"
-                      className="text-lg font-semibold"
-                    >
-                      Old Password
-                    </label>
-                    <input
-                      type="password"
-                      name="old_password"
-                      placeholder="Enter old-password"
-                      className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
-                      required
-                      value={password.old_password}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="flex flex-col w-full pt-4">
-                    <label
-                      name="new_password"
-                      className="text-lg font-semibold"
-                    >
-                      New Password
-                    </label>
-                    <input
-                      type="password"
-                      name="new_password"
-                      placeholder="Enter new-password"
-                      className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
-                      required
-                      value={password.new_password}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="flex flex-col w-full pt-4">
-                    <label
-                      name="new_confirmpassword"
-                      className="text-lg font-semibold"
-                    >
-                      Re-Enter New Password
-                    </label>
-                    <input
-                      type="password"
-                      name="new_confirmpassword"
-                      placeholder="Re-Enter new-Password"
-                      className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
-                      required
-                      value={password.new_confirmpassword}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="flex flex-col w-full pt-6">
-                    <button
-                      type="submit"
-                      className="bg-blue-400 py-2 rounded-md text-me font-semibold"
-                    >
-                      Change Password
-                    </button>
-                  </div>
-                </form>
+                  <Form
+                    // action=""
+                    className="flex flex-col items-start"
+                    // onSubmit={handleSubmit}
+                  >
+                    <div className="flex flex-col w-full pt-4">
+                      <label
+                        name="old_password"
+                        className="text-lg font-semibold"
+                      >
+                        Old Password
+                      </label>
+                      <Field
+                        type="password"
+                        name="old_password"
+                        placeholder="Enter old-password"
+                        className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
+                      />
+                      <ErrorMessage
+                        name="old_password"
+                        component="div"
+                        className="text-red-500 text-sm"
+                      />
+                    </div>
+                    <div className="flex flex-col w-full pt-4">
+                      <label
+                        name="new_password"
+                        className="text-lg font-semibold"
+                      >
+                        New Password
+                      </label>
+                      <Field
+                        type="password"
+                        name="new_password"
+                        placeholder="Enter new-password"
+                        className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
+                      />
+                      <ErrorMessage
+                        name="new_password"
+                        component="div"
+                        className="text-red-500 text-sm"
+                      />
+                    </div>
+                    <div className="flex flex-col w-full pt-4">
+                      <label
+                        name="new_confirmpassword"
+                        className="text-lg font-semibold"
+                      >
+                        Re-Enter New Password
+                      </label>
+                      <Field
+                        type="password"
+                        name="new_confirmpassword"
+                        placeholder="Re-Enter new-Password"
+                        className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
+                      />
+                      <ErrorMessage
+                        name="new_confirmpassword"
+                        component="div"
+                        className="text-red-500 text-sm"
+                      />
+                    </div>
+                    <div className="flex flex-col w-full pt-6">
+                      <button
+                        type="submit"
+                        className="bg-blue-400 py-2 rounded-md text-me font-semibold"
+                      >
+                        Change Password
+                      </button>
+                    </div>
+                  </Form>
+                </Formik>
+                <Link to="/forgot-password" className="text-blue-800">
+                  Forgot Password !
+                </Link>
               </div>
             </div>
           </div>

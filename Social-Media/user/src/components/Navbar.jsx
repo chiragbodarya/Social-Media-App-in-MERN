@@ -1,13 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IoIosSettings } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 import { FaKey } from "react-icons/fa6";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
-// import { UserContext } from "../../context/UserContext";
+import { UserContext } from "../context/UserContext";
 
 const Navbar = () => {
-  // const { user } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   // console.log("user data in navbar :  ", user);
   const [settingVisible, setSettingVisible] = useState(false);
 
@@ -19,8 +19,7 @@ const Navbar = () => {
     <>
       <div className="flex justify-between items-center lg:w-[70%] mx-auto py-2 px-4">
         <p className="text-[22px] font-bold">
-          Usename
-          {/* {!!user && <span>Hi, {user.username}</span>} */}
+          {!!user && <span className="capitalize">{user.username}</span>}
         </p>
         <IoIosSettings onClick={toggleSetting} />
       </div>

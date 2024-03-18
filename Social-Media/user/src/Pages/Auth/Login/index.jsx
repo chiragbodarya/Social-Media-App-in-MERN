@@ -14,23 +14,46 @@ const index = () => {
 
   const login = async (values) => {
     const { email, password } = values;
-    // console.log("email:", email);
-    // console.log("password:", password);
+
     try {
-      const oldUser = await axios.post("/login", {
+      const response = await axios.post("/login", {
         email,
         password,
       });
-      // console.log("oldUser", oldUser);
-      if (oldUser.data.error) {
-        alert(oldUser.data.error);
+      console.log(response);
+      if (response.status === 200) {
+        alert(response.data.message);
+        // console.log(response.data);
+        localStorage.setItem("token", response.data.token);
+        // const UserData = response.data.user;
+        // const user = localStorage.setItem("User", UserData);
+        // console.log("user", user);
+        // console.log("UseData", UserData);
+        navigate("/profile");
       } else {
-        alert(oldUser.data.message);
-        navigate("/");
+        const errorMessage =
+          response.data.error || "Login failed. Please try again.";
+        alert(errorMessage);
       }
     } catch (error) {
-      alert.error("Login failed. Please try again.");
-      alert("");
+      // Handle different types of errors
+      if (error.response) {
+        // Server responded with a status code
+        if (error.response.status === 401) {
+          alert("Password is incorrect. Please try again.");
+        } else if (error.response.status === 404) {
+          alert("User not found. Please check your email.");
+        } else {
+          alert("An error occurred. Please try again later.");
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        alert("Network error. Please check your internet connection.");
+      } else {
+        // Something happened in setting up the request
+        alert("An unexpected error occurred. Please try again later.");
+      }
+      console.error("Error logging in:", error);
     }
   };
 
