@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Profile from "../assets/profile-img.png";
 import { IoHeart } from "react-icons/io5";
 import { TfiCommentAlt } from "react-icons/tfi";
 import { IoSend } from "react-icons/io5";
+import { UserContext } from "../context/UserContext";
 
 const PostBox = () => {
+   const { user } = useContext(UserContext);
   const [comment, setComment] = useState(false);
 
   const toggleComment = () => {
@@ -21,7 +23,9 @@ const PostBox = () => {
             className="object-cover rounded-full "
           />
         </div>
-        <span className="font-bold">John Doe</span>
+        <span className="font-bold">
+          {!!user && <span className="capitalize">{user.username}</span>}
+        </span>
       </div>
       <div className="w-[100%] max-w-[400px] mx-auto h-[300px] md:h-[400px]">
         <img src={Profile} alt="" className="w-[100%] h-[100%]" />

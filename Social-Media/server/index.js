@@ -20,7 +20,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/social-media')
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: false }))
-
+app.use(express.static('public'))
 
 
 //router

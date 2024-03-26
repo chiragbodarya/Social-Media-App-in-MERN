@@ -1,21 +1,72 @@
 import React, { useState } from "react";
 import Img from "../../../assets/img/login-img.png";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import * as Yup from "yup";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+// import { useLocation } from "react-router-dom";
 
 const ResetPassword = () => {
-  const [newPassword, setNewPassword] = useState({
-    new_password: "",
-    new_confirmpassword: "",
+  const navigate = useNavigate();
+  const [message, setMessage] = useState();
+  const [error, setError] = useState();
+
+  const validationSchema = Yup.object({
+    new_password: Yup.string()
+      .required("Required")
+      .min(8, "Must be 8 characters or more")
+      .matches(/[a-z]+/, "One lowercase character")
+      .matches(/[A-Z]+/, "One uppercase character")
+      .matches(/[@$!%*#?&]+/, "One special character")
+      .matches(/\d+/, "One number"),
+    new_confirmpassword: Yup.string()
+      .oneOf([Yup.ref("new_password"), null], "Passwords must match")
+      .required("Required"),
   });
 
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const val = e.target.value;
-    setNewPassword({ ...newPassword, [name]: val });
-  };
+  const data = useLocation();
+  // console.log("data", data);
+  const [email, setEmail] = useState(data.state.email);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(newPassword);
+  const handleResetPassword = async (value) => {
+    // console.log("email", email);
+    const { new_password, new_confirmpassword } = value;
+    // console.log("new_password", new_password);
+    // console.log("new_confirmpassword", new_confirmpassword);
+
+    try {
+      if (!new_password || !new_confirmpassword) {
+        setError("Fields are empty");
+      } else if (new_password !== new_confirmpassword) {
+        setError("Passwords do not match");
+      }
+      const response = await axios.post("/reset-password", {
+        email,
+        new_password,
+        new_confirmpassword,
+      });
+      if (response.status === 200) {
+        setMessage("password is updated");
+        navigate("/");
+      } else {
+        setError("Server error!");
+      }
+      console.log("response", response);
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          setError("confirm password is not match");
+        } else if (error.response.status === 404) {
+          setError("this email is not register");
+        } else if (error.response.status === 500) {
+          setError("Server Error!");
+        } else {
+          setError("Something went wrong on the server.");
+        }
+      } else {
+        console.error("not update password", error);
+      }
+    }
   };
 
   return (
@@ -35,54 +86,69 @@ const ResetPassword = () => {
                 <p className="text-center text-2xl font-bold">
                   Change Password
                 </p>
-                <form
-                  action=""
-                  className="flex flex-col items-start"
-                  onSubmit={handleSubmit}
+                <Formik
+                  initialValues={{
+                    newPassword: "",
+                    new_confirmpassword: "",
+                  }}
+                  validationSchema={validationSchema}
+                  onSubmit={handleResetPassword}
                 >
-                  <div className="flex flex-col w-full pt-4">
-                    <label
-                      name="new_password"
-                      className="text-lg font-semibold"
-                    >
-                      New Password
-                    </label>
-                    <input
-                      type="password"
-                      name="new_password"
-                      placeholder="Enter new-password"
-                      className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
-                      required
-                      value={newPassword.new_password}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="flex flex-col w-full pt-4">
-                    <label
-                      name="new_confirmpassword"
-                      className="text-lg font-semibold"
-                    >
-                      Re-Enter New Password
-                    </label>
-                    <input
-                      type="password"
-                      name="new_confirmpassword"
-                      placeholder="Re-Enter new-Password"
-                      className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
-                      required
-                      value={newPassword.new_confirmpassword}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="flex flex-col w-full pt-6">
-                    <button
-                      type="submit"
-                      className="bg-blue-400 py-2 rounded-md text-me font-semibold"
-                    >
-                      Change Password
-                    </button>
-                  </div>
-                </form>
+                  <Form action="" className="flex flex-col items-start">
+                    <div className="flex flex-col w-full pt-4">
+                      <label
+                        name="new_password"
+                        className="text-lg font-semibold"
+                      >
+                        New Password
+                      </label>
+                      <Field
+                        type="password"
+                        name="new_password"
+                        placeholder="Enter new-password"
+                        className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
+                      />
+                      <ErrorMessage
+                        name="new_password"
+                        component="div"
+                        className="text-red-500 text-sm"
+                      />
+                    </div>
+                    <div className="flex flex-col w-full pt-4">
+                      <label
+                        name="new_confirmpassword"
+                        className="text-lg font-semibold"
+                      >
+                        Re-Enter New Password
+                      </label>
+                      <Field
+                        type="password"
+                        name="new_confirmpassword"
+                        placeholder="Re-Enter new-Password"
+                        className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
+                      />
+                      <ErrorMessage
+                        name="new_confirmpassword"
+                        component="div"
+                        className="text-red-500 text-sm"
+                      />
+                    </div>
+                    <p className="text-sm font-semibold text-green-800">
+                      {message}
+                    </p>
+                    <p className="text-sm font-semibold text-red-800">
+                      {error}
+                    </p>
+                    <div className="flex flex-col w-full pt-6">
+                      <button
+                        type="submit"
+                        className="bg-blue-400 py-2 rounded-md text-me font-semibold"
+                      >
+                        Change Password
+                      </button>
+                    </div>
+                  </Form>
+                </Formik>
               </div>
             </div>
           </div>

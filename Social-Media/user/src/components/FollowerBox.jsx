@@ -59,7 +59,9 @@ const FollowerBox = () => {
           </div>
         </header>
         <div className="md:hidden text-sm my-2 px-3 py-2">
-          <h1 className="font-semibold">User Name</h1>
+          <h1 className="font-semibold">
+            {!!user && <span className="capitalize">{user.username}</span>}
+          </h1>
           <p>
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed
             veritatis hic neque.

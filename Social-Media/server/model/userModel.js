@@ -22,16 +22,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    profile_image: {
+    otpCode: {
         type: String,
-        require: true
+        required: false,
     },
-    follow_list: {
-        type: Array,
-    },
-    follower_list: {
-        type: Array,
-    },
+    profileImage: String,
+    follow_list: [],
+    follower_list: [],
     // like_post_list: [{
     //     post_by: {
     //         type: String
@@ -47,6 +44,8 @@ const userSchema = new mongoose.Schema({
     //     default: 1, //0 for not login and 1 for logged in user.
     // }
 })
+
+
 
 const User = mongoose.model('User', userSchema);
 

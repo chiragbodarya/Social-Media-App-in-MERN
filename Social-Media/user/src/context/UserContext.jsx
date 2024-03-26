@@ -9,7 +9,6 @@ const UserContextProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     // console.log("token ----> ", token);
-
     if (!user && token) {
       axios
         .get("/profile", {

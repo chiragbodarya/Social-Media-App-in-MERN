@@ -2,17 +2,15 @@ import React, { useState } from "react";
 import Img from "../../../assets/img/login-img.png";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ChangePassword = () => {
+   const navigate = useNavigate();
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const validationSchema = Yup.object({
-    old_password: Yup.string()
-      .required("Required")
-      .min(8, "Must be 8 characters or more")
-      .matches(/[a-z]+/, "One lowercase character")
-      .matches(/[A-Z]+/, "One uppercase character")
-      .matches(/[@$!%*#?&]+/, "One special character")
-      .matches(/\d+/, "One number"),
+    old_password: Yup.string().required("Required"),
     new_password: Yup.string()
       .required("Required")
       .min(8, "Must be 8 characters or more")
@@ -25,8 +23,48 @@ const ChangePassword = () => {
       .required("Required"),
   });
 
-  const hendleChangePassword = () => {
-    console.log("password is change");
+  const hendleChangePassword = async (values) => {
+    const token = localStorage.getItem("token");
+    console.log("Token from localStorage:", token); 
+    const { old_password, new_password, new_confirmpassword } = values;
+    console.log("values", values);
+    if (token) {
+      try {
+        const response = await axios.post(
+          "/change-password",
+          {
+            old_password,
+            new_password,
+            new_confirmpassword,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include token in the request headers
+            },
+          }
+        );
+        console.log(response);
+        if (response.status === 200) {
+          setMessage(response.data.message);
+          console.log(response.data);
+          navigate("/login");
+        } else {
+          const errorMessage = response.data.error || "password is not Change";
+          setError(errorMessage);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        if (error.response.status === 400) {
+          setError("Invalid old password");
+        } else if (error.response.status === 401) {
+          setError("New password and confirm password do not match");
+        } else {
+          setError("An unexpected error occurred. Please try again later.");
+        }
+      }
+    } else {
+      setError("tokon is not provided");
+    }
   };
 
   return (
@@ -43,6 +81,10 @@ const ChangePassword = () => {
             </div>
             <div className="w-[90%] md:w-[50%]">
               <div className="border-1 border-[#000] rounded-md py-4 px-10  min-w-fit w-full max-w-[500px] mx-auto">
+                <p className="text-green-800 font-bold">
+                  {!message ? "" : message}
+                </p>
+                <p className="text-red-800 font-bold">{!error ? "" : error}</p>
                 <p className="text-center text-2xl font-bold">
                   Change Password
                 </p>

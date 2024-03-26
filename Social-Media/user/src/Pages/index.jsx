@@ -1,18 +1,15 @@
-import React from "react";
-import FollowerBox from "../components/FollowerBox";
+import React, { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 import Navbar from "../components/Navbar";
-import PostBox from "../components/PostBox";
 
 const index = () => {
+  const { user } = useContext(UserContext);
   return (
     <>
-      <div className="lg:w-8/12 lg:mx-auto">
-        <Navbar />
-        <hr className="pt-2" />
-        <FollowerBox />
-        <hr className="pt-2" />
-        <PostBox />
-        <PostBox />
+      <Navbar />
+      <div className="flex justify-center items-center font-bold text-[50px] h-[95vh]">
+        <p>Hello-</p> <br />
+        <p>{!!user && <p className="capitalize">{user.username}</p>}</p>
       </div>
     </>
   );

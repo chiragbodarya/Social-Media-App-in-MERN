@@ -20,15 +20,11 @@ const index = () => {
         email,
         password,
       });
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         alert(response.data.message);
         // console.log(response.data);
         localStorage.setItem("token", response.data.token);
-        // const UserData = response.data.user;
-        // const user = localStorage.setItem("User", UserData);
-        // console.log("user", user);
-        // console.log("UseData", UserData);
         navigate("/profile");
       } else {
         const errorMessage =
@@ -36,9 +32,7 @@ const index = () => {
         alert(errorMessage);
       }
     } catch (error) {
-      // Handle different types of errors
       if (error.response) {
-        // Server responded with a status code
         if (error.response.status === 401) {
           alert("Password is incorrect. Please try again.");
         } else if (error.response.status === 404) {

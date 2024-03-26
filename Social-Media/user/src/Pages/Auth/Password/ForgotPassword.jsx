@@ -1,20 +1,49 @@
 import React, { useState } from "react";
 import Img from "../../../assets/img/forgot-password.png";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState({
-    email: "",
+  const navigate = useNavigate();
+  const [message, setMessage] = useState();
+  const [error, setError] = useState();
+
+  const validationSchema = Yup.object({
+    email: Yup.string().email("Invalid email address").required("Required"),
   });
 
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const val = e.target.value;
-    setEmail({ ...email, [name]: val });
-  };
+  const handleSubmit = async (values) => {
+    const { email } = values;
+    
+    // console.log("values-only-email", values);
+    // console.log("email=========", email);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(email);
+    try {
+      const response = await axios.post("/forgot-password-send-otp", { email });
+      // console.log("response", response);
+      if (response.status === 200) {
+        alert(response.data.message);
+        navigate("/verified-otp", { state: { email } });
+      } else {
+        const errorMessage =
+          response.data.error || "email not send!, Please try again.";
+        setMessage(errorMessage);
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 404) {
+          setError("the email is not registered with us");
+        } else if (error.response.status === 401) {
+          setError("Error setting OTP ");
+        } else if (error.response.status === 500) {
+          setError("the server encountered an error");
+        } else {
+          setError("this time email not send please try algin leter !", error);
+        }
+      }
+    }
   };
 
   return (
@@ -32,31 +61,43 @@ const ForgotPassword = () => {
             <div className="w-[90%] md:w-[50%]">
               <div className="border-1 border-[#000] rounded-md py-4 px-10 min-w-fit w-full max-w-[500px] mx-auto">
                 <p className="text-center text-2xl font-bold">Enter Email</p>
-                <form
-                  action=""
-                  className="flex flex-col items-start"
+                <Formik
+                  initialValues={{ email: "" }}
+                  validationSchema={validationSchema}
                   onSubmit={handleSubmit}
                 >
-                  <div className="flex flex-col w-full pt-4">
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Enter Email Address"
-                      className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
-                      required
-                      value={email.email}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="flex flex-col w-full pt-6">
-                    <button
-                      type="submit"
-                      className="bg-blue-400 py-2 rounded-md text-me font-semibold"
-                    >
-                      Send Link
-                    </button>
-                  </div>
-                </form>
+                  <Form action="" className="flex flex-col items-start">
+                    <div className="flex flex-col w-full pt-4">
+                      <Field
+                        type="email"
+                        name="email"
+                        placeholder="Enter Email Address"
+                        className="border-2 border-[#000] focus:border-0 focus:border-3 focus:outline-blue-900 rounded-md py-1 px-3"
+                      />
+                      <ErrorMessage
+                        name="email"
+                        component="div"
+                        className="text-red-500 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-green-800">
+                        {message}
+                      </p>
+                      <p className="text-sm font-semibold text-red-800">
+                        {error}
+                      </p>
+                    </div>
+                    <div className="flex flex-col w-full pt-6">
+                      <button
+                        type="submit"
+                        className="bg-blue-400 py-2 rounded-md text-me font-semibold"
+                      >
+                        Send OTP
+                      </button>
+                    </div>
+                  </Form>
+                </Formik>
               </div>
             </div>
           </div>
