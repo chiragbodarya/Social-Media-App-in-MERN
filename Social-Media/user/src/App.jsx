@@ -21,10 +21,11 @@ import EditProfile from "./Pages/EditProfile";
 import Search from "./Pages/Search";
 import Extera from "./Pages/Extera";
 
-axios.defaults.baseURL = "http://localhost:5000/";
+axios.defaults.baseURL = `http://localhost:${process.env.BACKEND_PORT}/`;
 
 const App = () => {
   const { user } = useContext(UserContext);
+  const token = localStorage.getItem("token");
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -53,8 +54,8 @@ const App = () => {
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/extera" element={<Extera />} />
         </Routes>
-        {/* {!!user && <span className="capitalize bg-red-900">{user.username}</span>} */}
-        <MenuBar />
+        {token == null ? undefined : <MenuBar />}
+        {/* <MenuBar /> */}
       </UserContextProvider>
     </>
   );

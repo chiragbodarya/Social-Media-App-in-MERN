@@ -43,6 +43,7 @@ const index = () => {
         password,
         confirmpassword,
       });
+      console.log("newUser", newUser);
       try {
         if (newUser.error) {
           alert(newUser.error);

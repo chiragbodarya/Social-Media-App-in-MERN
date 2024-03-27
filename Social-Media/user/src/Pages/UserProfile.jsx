@@ -6,7 +6,7 @@ import PostBox from "../components/PostBox";
 const UserProfile = () => {
   return (
     <>
-        <Navbar />
+      <Navbar />
       <div className="lg:w-8/12 lg:mx-auto">
         <FollowerBox />
         <hr className="pt-2" />

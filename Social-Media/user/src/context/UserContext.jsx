@@ -28,6 +28,18 @@ const UserContextProvider = ({ children }) => {
     }
   }, []);
 
+  if (user && user.profileImg) {
+    // console.log("user", user);
+    // console.log("user.profileImg", user.profileImg);
+    let ProfileImag = user.profileImg.replace("public\\", "");
+    // console.log("ProfileImag", ProfileImag);
+    user.profileImg = ProfileImag;
+  } else {
+    console.log("User or profile image not found");
+  }
+  // console.log("user.profileImg contatext user.profileImg", user.profileImg);
+  // console.log("this is context user", user);
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}

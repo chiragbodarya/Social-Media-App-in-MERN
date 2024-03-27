@@ -20,12 +20,6 @@ const useState = () => {
     // login();
   };
 
-  // const login = () => {
-  //   axios
-  //     .post("http://localhost:3001/login", oldUser)
-  //     .then((res) => alert(res.data.message));
-  // };
-
   return (
     <>
       <div className="flex justify-center items-center w-[100%] h-[100%] min-h-[100vh] overflow-hidden">

@@ -36,7 +36,7 @@ const userRagister = async (req, res) => {
 
         //this code is store the data in mongodb
         await newUser.save()
-
+        res.json('user register successfully')
         // this code is return the result in postmen
         return res.json(newUser)
     } catch (error) {
@@ -84,10 +84,10 @@ const userLogin = async (req, res) => {
 
 //this code is use to get profile
 const getProfile = (req, res) => {
-    const { id, firstname, lastname, username, email, password } = req.user.user;
+    const { id, firstname, lastname, username, email, password, profileImg, aboutUs, followers, following } = req.user.user;
     // console.log(req.user.user);
     // console.log(id, firstname, lastname, username, email, password);
-    res.json({ id, firstname, lastname, username, email, password, message: 'Profile Page' });
+    res.json({ id, firstname, lastname, username, email, password, profileImg, aboutUs, followers, following, message: 'Profile Page' });
 };
 
 

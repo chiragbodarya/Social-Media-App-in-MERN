@@ -18,7 +18,7 @@ const PostBox = () => {
       <div className="flex items-center mb-2">
         <div className="rounded-full h-8 w-8 bg-gray-400 mr-2">
           <img
-            src={Profile}
+            src={`http://localhost:${process.env.BACKEND_PORT}/${user.profileImg}`}
             alt="profile"
             className="object-cover rounded-full "
           />

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema.Types
 
 const userSchema = new mongoose.Schema({
     firstname: {
@@ -26,25 +27,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    profileImage: String,
-    follow_list: [],
-    follower_list: [],
-    // like_post_list: [{
-    //     post_by: {
-    //         type: String
-    //     },
-    // }],
-    // comment_list: [{
-    //     comment_by: {
-    //         name: String,
-    //         require: true
-    //     }
-    // }],
-    // is_login: {
-    //     default: 1, //0 for not login and 1 for logged in user.
-    // }
+    profileImg: {
+        type: String
+    },
+    aboutUs: {
+        type: String
+    },
+    followers: [{ type: ObjectId, red: "User" }],
+    following: [{ type: ObjectId, red: "User" }],
 })
-
 
 
 const User = mongoose.model('User', userSchema);
