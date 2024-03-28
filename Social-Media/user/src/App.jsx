@@ -19,7 +19,9 @@ import UserProfile from "./Pages/UserProfile";
 import MenuBar from "./components/MenuBar";
 import EditProfile from "./Pages/EditProfile";
 import Search from "./Pages/Search";
+import AddPost from "./Pages/AddPost";
 import Extera from "./Pages/Extera";
+import UserDetails from "./Pages/UserDetails";
 
 axios.defaults.baseURL = `http://localhost:${process.env.BACKEND_PORT}/`;
 
@@ -38,6 +40,7 @@ const App = () => {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/add-post" element={<AddPost />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/registration" element={<Registration />} />
@@ -53,6 +56,7 @@ const App = () => {
           <Route path="/change-password" element={<ChangePassword />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/extera" element={<Extera />} />
+          <Route path="/user/:userId" element={<UserDetails />} />
         </Routes>
         {token == null ? undefined : <MenuBar />}
         {/* <MenuBar /> */}

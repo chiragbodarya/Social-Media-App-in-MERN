@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controller/authController');
 const profileController = require('../controller/profileController');
+const searchUserController = require('../controller/searchUserController');
+const userProfileController = require('../controller/userProfileController');
 const upload = require('../middleware/multerConfig');
 
 
@@ -28,11 +30,14 @@ router.post('/reset-password', validatorUserRagister, authController.resetPasswo
 // update profile
 router.put('/update-profile/:id', upload.single('profileImg'), profileController.updateProfile);
 
+router.get('/search-user', searchUserController.searchUserProfile)
+router.get('/user/:id', userProfileController.userProfileController)
+
 //follow user
-router.put("/follow", verifyToken, profileController.followUser);
+// router.post("/follow", verifyToken, profileController.followUser);
 
 // Unfollow user
-// router.put("/Unfollow", verifyToken, profileController.unFollowUser);
+// router.post("/Unfollow", verifyToken, profileController.unFollowUser);
 
 
 module.exports = router;

@@ -41,38 +41,39 @@ const updateProfile = async (req, res) => {
 
 
 // follow User
-const followUser = async (req, res) => {
+// const followUser = async (req, res) => {
+//     console.log('api is called')
+//     console.log(req.body._id)
+//     console.log(req.user._id)
+//     try {
+//         await User.findByIdAndUpdate(res.body.followId, {
+//             $push: { followers: req.user._id }
+//         }, {
+//             new: true
+//         }, async (err, result) => {
+//             console.log("result", result);
+//             if (err) {
+//                 return res.status(400).json({
+//                     error: "Could not add to followers"
+//                 })
+//             }
+//             await User.findByIdAndUpdate(req.user._id, {
+//                 $push: { following: result.body._id }
+//             }, {
+//                 new: true
+//             }).then((user) => {
+//                 res.status(200).json("user", user);
+//             }).catch(error => { return res.status(404).json({ error: error }) });
+//         })
+//     } catch (error) {
+//         console.log("error in the middleware", error);
+//         return res.status(400).json({ error: "Follow failed!" });
+//     }
+// }
 
-    try {
-        await User.findByIdAndUpdate(res.body.followId, {
-            $push: { followers: req.user._id }
-        }, {
-            new: true
-        }, async (err, result) => {
-            console.log("result", result);
-            if (err) {
-                return res.status(400).json({
-                    error: "Could not add to followers"
-                })
-            }
-            await User.findByIdAndUpdate(req.user._id, {
-                $push: { following: result.body._id }
-            }, {
-                new: true
-            }).then((user) => {
-                res.status(200).json("user", user);
-            }).catch(error => { return res.status(404).json({ error: error }) });
-        })
-    } catch (error) {
-        console.log("error in the middleware", error);
-        return res.status(400).json({ error: "Follow failed!" });
-    }
-}
 
-
-//unfollow User
+// unfollow User
 // const unFollowUser = async () => {
-
 //     try {
 //         await User.findByIdAndUpdate(res.body.followId, {
 //             $pull: { followers: req.user._id }
@@ -99,4 +100,4 @@ const followUser = async (req, res) => {
 //     }
 // }
 
-module.exports = { updateProfile, followUser };
+module.exports = { updateProfile };

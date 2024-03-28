@@ -10,13 +10,9 @@ const FollowerBox = () => {
   if (user && user.followers) {
     followers = user.followers.length;
     following = user.following.length;
-    console.log("followers:", followers);
-    console.log("following:", following);
+    // console.log("followers:", followers);
+    // console.log("following:", following);
   }
-
-  // const folloeUser = (userId) => {
-  //   axios.put("/follow");
-  // };
 
   return (
     <div>
@@ -64,9 +60,9 @@ const FollowerBox = () => {
               </h1>
               <p>{user.aboutUs}</p>
             </div>
-            <button className="bg-blue-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block w-full max-w-[300px] mx-auto">
+            {/* <button className="bg-blue-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block w-full max-w-[300px] mx-auto">
               Follow
-            </button>
+            </button> */}
           </div>
         </header>
         <div className="md:hidden text-sm my-2 px-3 py-2">

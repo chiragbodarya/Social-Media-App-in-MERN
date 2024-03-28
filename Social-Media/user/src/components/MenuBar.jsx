@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { MdOutlinePersonSearch } from "react-icons/md";
 import { FaHome } from "react-icons/fa";
 import { IoMdPerson } from "react-icons/io";
+import { MdOutlineAddAPhoto } from "react-icons/md";
 
 const MenuBar = () => {
   return (
@@ -11,21 +12,28 @@ const MenuBar = () => {
         <div className="flex justify-between items-center lg:w-[70%] mx-auto py-2 px-4">
           <Link
             to="/home"
-            className="flex flex-col items-center px-5 py-1 border-2 border-[#85e0e0] rounded-[5px]"
+            className="flex flex-col items-center px-2 md:px-5 py-1 border-2 border-[#85e0e0] rounded-[5px]"
           >
             <FaHome className="w-7 h-7" />
             <p className="text-sm font-semibold">Home</p>
           </Link>
           <Link
             to="/search"
-            className="flex flex-col items-center px-5 py-1 border-2 border-[#85e0e0] rounded-[5px]"
+            className="flex flex-col items-center px-2 md:px-5 py-1 border-2 border-[#85e0e0] rounded-[5px]"
           >
             <MdOutlinePersonSearch className="w-7 h-7" />
             <p className="text-sm font-semibold">Search</p>
           </Link>
           <Link
+            to="/add-post"
+            className="flex flex-col items-center px-2 md:px-5 py-1 border-2 border-[#85e0e0] rounded-[5px]"
+          >
+            <MdOutlineAddAPhoto className="w-7 h-7" />
+            <p className="text-sm font-semibold">Add Post</p>
+          </Link>
+          <Link
             to="/profile"
-            className="flex flex-col items-center px-5 py-1 border-2 border-[#85e0e0] rounded-[5px]"
+            className="flex flex-col items-center px-2 md:px-5 py-1 border-2 border-[#85e0e0] rounded-[5px]"
           >
             <IoMdPerson className="w-7 h-7" />
             <p className="text-sm font-semibold">Profile</p>

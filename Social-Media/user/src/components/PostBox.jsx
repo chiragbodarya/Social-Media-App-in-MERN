@@ -1,20 +1,26 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Profile from "../assets/profile-img.png";
 import { IoHeart } from "react-icons/io5";
 import { TfiCommentAlt } from "react-icons/tfi";
 import { IoSend } from "react-icons/io5";
-import { UserContext } from "../context/UserContext";
 
-const PostBox = () => {
-   const { user } = useContext(UserContext);
+const PostBox = (props) => {
   const [comment, setComment] = useState(false);
+  const [user, setUser] = useState();
+  useEffect(() => {
+    setUser(props.user);
+  }, [props.user]);
+  if (!user) {
+    return null; // or render a loading indicator
+  }
+  // console.log("user", user);
 
   const toggleComment = () => {
     setComment(!comment);
   };
 
   return (
-    <div className="bg-white shadow-md rounded-md p-4 mb-4">
+    <div className="bg-white shadow-md rounded-md p-4 mb-4 mx-3">
       <div className="flex items-center mb-2">
         <div className="rounded-full h-8 w-8 bg-gray-400 mr-2">
           <img
@@ -24,7 +30,7 @@ const PostBox = () => {
           />
         </div>
         <span className="font-bold">
-          {!!user && <span className="capitalize">{user.username}</span>}
+          <span className="capitalize">{user.username}</span>
         </span>
       </div>
       <div className="w-[100%] max-w-[400px] mx-auto h-[300px] md:h-[400px]">
