@@ -30,10 +30,10 @@ const Search = () => {
 
   const handleUserClick = (userId) => {
     navigate(`/user/${userId}`);
-    console.log("userId", userId);
+    // console.log("userId", userId);
   };
 
-  console.log(results);
+  // console.log(results);
   return (
     <>
       <div className=" bg-[#DAF5F5]">

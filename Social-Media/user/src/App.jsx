@@ -21,7 +21,9 @@ import EditProfile from "./Pages/EditProfile";
 import Search from "./Pages/Search";
 import AddPost from "./Pages/AddPost";
 import Extera from "./Pages/Extera";
-import UserDetails from "./Pages/UserDetails";
+import SearchUserDetails from "./Pages/SearchUserDetails";
+// import UserFollower from "./Pages/UserFollower";
+// import UserFollowing from "./Pages/UserFollowing";
 
 axios.defaults.baseURL = `http://localhost:${process.env.BACKEND_PORT}/`;
 
@@ -56,7 +58,9 @@ const App = () => {
           <Route path="/change-password" element={<ChangePassword />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/extera" element={<Extera />} />
-          <Route path="/user/:userId" element={<UserDetails />} />
+          <Route path="/user/:userId" element={<SearchUserDetails />} />
+          {/* <Route path="/user/follower" element={<UserFollower />} />
+          <Route path="/user/following" element={<UserFollowing />} /> */}
         </Routes>
         {token == null ? undefined : <MenuBar />}
         {/* <MenuBar /> */}

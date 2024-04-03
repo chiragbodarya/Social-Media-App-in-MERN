@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import { Link } from "react-router-dom";
 // import axios from "axios";
 
 const FollowerBox = () => {
@@ -40,18 +41,22 @@ const FollowerBox = () => {
                 </span>
                 <span className="text-[12px] md:text-[16px]">posts</span>
               </li>
-              <li className="flex flex-col md:flex-row items-center">
-                <span className="font-semibold text-[14px] md:text-[20px]">
-                  {followers}
-                </span>
-                <span className="text-[12px] md:text-[16px]">followers</span>
-              </li>
-              <li className="flex flex-col md:flex-row items-center">
-                <span className="font-semibold text-[14px] md:text-[20px]">
-                  {following}
-                </span>
-                <span className="text-[12px] md:text-[16px]">following</span>
-              </li>
+              <Link to="/user/follower">
+                <li className="flex flex-col md:flex-row items-center">
+                  <span className="font-semibold text-[14px] md:text-[20px]">
+                    {followers}
+                  </span>
+                  <span className="text-[12px] md:text-[16px]">followers</span>
+                </li>
+              </Link>
+              <Link to="/user/following">
+                <li className="flex flex-col md:flex-row items-center">
+                  <span className="font-semibold text-[14px] md:text-[20px]">
+                    {following}
+                  </span>
+                  <span className="text-[12px] md:text-[16px]">following</span>
+                </li>
+              </Link>
             </ul>
 
             <div className="hidden md:block pb-2 text-start">

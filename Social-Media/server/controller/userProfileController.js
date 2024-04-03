@@ -1,10 +1,10 @@
 const User = require('../model/userModel');
 
 const userProfileController = async (req, res) => {
-    console.log('userProfileController api is called')
+    // console.log('userProfileController api is called')
     const userId = req.params.id;
-    console.log(userId + ' is the id of the user');
-    console.log('userId', userId)
+    // console.log(userId + ' is the id of the user');
+    // console.log('userId', userId)
     try {
         const user = await User.find({ _id: userId });
         if (user) {

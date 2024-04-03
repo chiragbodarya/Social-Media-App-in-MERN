@@ -34,7 +34,7 @@ router.get('/search-user', searchUserController.searchUserProfile)
 router.get('/user/:id', userProfileController.userProfileController)
 
 //follow user
-// router.post("/follow", verifyToken, profileController.followUser);
+router.post("/follow/:id", verifyToken, profileController.followUser);
 
 // Unfollow user
 // router.post("/Unfollow", verifyToken, profileController.unFollowUser);

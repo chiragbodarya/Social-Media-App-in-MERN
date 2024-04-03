@@ -1,7 +1,7 @@
 const User = require('../model/userModel');
 
 const searchUserProfile = async (req, res) => {
-    console.log('searchUserProfile api is called')
+    // console.log('searchUserProfile api is called')
     try {
         const { query } = req.query;
         if (!query) {

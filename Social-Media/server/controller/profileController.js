@@ -41,35 +41,47 @@ const updateProfile = async (req, res) => {
 
 
 // follow User
-// const followUser = async (req, res) => {
-//     console.log('api is called')
-//     console.log(req.body._id)
-//     console.log(req.user._id)
-//     try {
-//         await User.findByIdAndUpdate(res.body.followId, {
-//             $push: { followers: req.user._id }
-//         }, {
-//             new: true
-//         }, async (err, result) => {
-//             console.log("result", result);
-//             if (err) {
-//                 return res.status(400).json({
-//                     error: "Could not add to followers"
-//                 })
-//             }
-//             await User.findByIdAndUpdate(req.user._id, {
-//                 $push: { following: result.body._id }
-//             }, {
-//                 new: true
-//             }).then((user) => {
-//                 res.status(200).json("user", user);
-//             }).catch(error => { return res.status(404).json({ error: error }) });
-//         })
-//     } catch (error) {
-//         console.log("error in the middleware", error);
-//         return res.status(400).json({ error: "Follow failed!" });
-//     }
-// }
+const followUser = async (req, res) => {
+    console.log('followUser API is called');
+    const searchUserId = req.params.id;
+    const loggedInUserId = req.user.user.id;
+    console.log(`Searched user id: ${searchUserId}`);
+    console.log(`Logged-in user id: ${loggedInUserId}`);
+
+    try {
+        const existFollowers = await User.findOne({ _id: loggedInUserId, followers: { $in: [searchUserId] } }, "followers");
+        const existFollowing = await User.findOne({ _id: searchUserId, following: { $in: [loggedInUserId] } }, "following");
+        console.log('existFollowers', existFollowers)
+        console.log('existFollowing', existFollowing)
+
+        if (existFollowers || existFollowing) {
+            res.status(401).json({ message: "You have already followed this user" });
+        } else {
+            try {
+                const updatedLoggedInUser = await User.findByIdAndUpdate(
+                    loggedInUserId,
+                    { $push: { followers: searchUserId } },
+                    { new: true }
+                );
+                console.log('updatedLoggedInUser', updatedLoggedInUser);
+
+                const updatedFollowedUser = await User.findByIdAndUpdate(
+                    searchUserId,
+                    { $push: { following: loggedInUserId } },
+                    { new: true }
+                );
+                console.log('updatedFollowedUser', updatedFollowedUser);
+                res.status(200).json({ message: "User followed successfully", updatedLoggedInUser, updatedFollowedUser });
+            } catch (error) {
+                console.error('Error following user:', error);
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        }
+    } catch (error) {
+        console.error('Error in the followUser middleware:', error);
+        res.status(404).json({ error: 'Follow failed!' });
+    }
+};
 
 
 // unfollow User
@@ -100,4 +112,4 @@ const updateProfile = async (req, res) => {
 //     }
 // }
 
-module.exports = { updateProfile };
+module.exports = { updateProfile, followUser };
