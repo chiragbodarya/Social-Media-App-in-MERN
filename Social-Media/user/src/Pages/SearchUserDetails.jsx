@@ -5,7 +5,7 @@ import { FaChevronLeft } from "react-icons/fa6";
 import PostBox from "../components/PostBox";
 
 const SearchUserDetails = () => {
-  const [loading, setLoading] = useState();
+  const [existFollowers, setExistFollowers] = useState(false);
   const [error, setError] = useState(null);
   const { userId } = useParams();
   const navigate = useNavigate();
@@ -48,11 +48,9 @@ const SearchUserDetails = () => {
     console.log("User or profile image not found");
   }
 
-
   const handleFollow = async () => {
     console.log("add follower");
     try {
-      setLoading(true);
       const response = await axios.post(
         `/follow/${userId}`,
         {},
@@ -62,11 +60,13 @@ const SearchUserDetails = () => {
           },
         }
       );
-      console.log(response.data.message); 
+      console.log(response.data.message);
+      setExistFollowers(true);
     } catch (error) {
+      if (error.response.status === 401) {
+        setExistFollowers(true);
+      }
       console.error("Error following user:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -131,7 +131,7 @@ const SearchUserDetails = () => {
                   onClick={handleFollow}
                   className="bg-blue-500 px-2 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block block w-full max-w-[300px] mx-auto"
                 >
-                  {loading == true ? "UnFollow" : "Follow"}
+                  {existFollowers == true ? "UnFollow" : "Follow"}
                 </button>
               </div>
             </div>

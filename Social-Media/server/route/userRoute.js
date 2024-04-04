@@ -4,11 +4,17 @@ const authController = require('../controller/authController');
 const profileController = require('../controller/profileController');
 const searchUserController = require('../controller/searchUserController');
 const userProfileController = require('../controller/userProfileController');
+const postController = require('../controller/postController');
 const upload = require('../middleware/multerConfig');
+
+
 
 
 const { validatorUserRagister, userValidation } = require('../middleware/validation/user');
 const { verifyToken } = require('../middleware/verifyToken');
+const uploadpost = require('../middleware/postImage');
+
+
 
 
 // this is your router
@@ -30,7 +36,10 @@ router.post('/reset-password', validatorUserRagister, authController.resetPasswo
 // update profile
 router.put('/update-profile/:id', upload.single('profileImg'), profileController.updateProfile);
 
+//serch other user
 router.get('/search-user', searchUserController.searchUserProfile)
+
+//serch user profile
 router.get('/user/:id', userProfileController.userProfileController)
 
 //follow user
@@ -39,5 +48,29 @@ router.post("/follow/:id", verifyToken, profileController.followUser);
 // Unfollow user
 // router.post("/Unfollow", verifyToken, profileController.unFollowUser);
 
+
+
+
+// Upload Post
+router.post('/upload', verifyToken, uploadpost.single('postImage'), postController.uploadPost);
+
+// Get All Posts
+router.post('/getallpost/:id', postController.getAllPosts);
+
+// // Delete Post
+// router.delete('/:id', postController.deletePost);
+
+// // Edit Post
+// router.put('/:id', postController.editPost);
+
+
+// // Like Post
+// router.post('/like/:id', postController.likePost);
+
+// // Comment Post
+// router.post('/comment/:id', postController.commentPost);
+
+// // Reply to Comment
+// router.post('/comment/:postId/reply/:commentId', postController.replyToComment);
 
 module.exports = router;

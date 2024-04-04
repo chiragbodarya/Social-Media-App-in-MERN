@@ -55,7 +55,8 @@ const followUser = async (req, res) => {
         console.log('existFollowing', existFollowing)
 
         if (existFollowers || existFollowing) {
-            res.status(401).json({ message: "You have already followed this user" });
+            res.status(401).json({ error: "You have already followed this user" });
+            return existFollowers;
         } else {
             try {
                 const updatedLoggedInUser = await User.findByIdAndUpdate(

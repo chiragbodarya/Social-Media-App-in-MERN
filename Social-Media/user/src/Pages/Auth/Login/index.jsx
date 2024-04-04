@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Img from "../../../assets/img/login.png";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { UserContext } from "../../../context/UserContext";
 
 const index = () => {
   const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext);
+  // const [user, setUser] = useState("");
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email address").required("Required"),
     password: Yup.string().required("Required"),
@@ -25,7 +28,7 @@ const index = () => {
         alert(response.data.message);
         // console.log(response.data);
         localStorage.setItem("token", response.data.token);
-        navigate("/profile");
+        // navigate("/profile");
       } else {
         const errorMessage =
           response.data.error || "Login failed. Please try again.";
@@ -48,6 +51,33 @@ const index = () => {
         alert("An unexpected error occurred. Please try again later.");
       }
       console.error("Error logging in:", error);
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      // console.log("token ----> ", token);
+      if (!user && token) {
+        axios
+          .get("/profile", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            setUser(response.data);
+            // console.log("data ===  ", response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching user profile:", error);
+          });
+        // console.log("user", user);
+        navigate("/profile");
+      } else {
+        console.log("user is not login");
+      }
+    } catch (error) {
+      console.log("error", error);
+      console.log("not fatching data for user");
     }
   };
 

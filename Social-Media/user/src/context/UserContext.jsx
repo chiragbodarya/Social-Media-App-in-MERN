@@ -27,6 +27,7 @@ const UserContextProvider = ({ children }) => {
       console.log("user is not login");
     }
   }, []);
+  // console.log("user context", user);
 
   if (user && user.profileImg) {
     // console.log("user", user);

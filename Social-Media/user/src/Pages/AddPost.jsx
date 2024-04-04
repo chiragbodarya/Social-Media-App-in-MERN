@@ -2,15 +2,18 @@ import React, { useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import Profile from "../assets/profile-img.png";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AddPost = () => {
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   const MAX_FILE_SIZE = 502400;
 
   const validationSchema = Yup.object({
-    profileImg: Yup.mixed()
+    postImage: Yup.mixed()
       .test(
         "fileSize",
         "Max allowed size is 500KB",
@@ -25,12 +28,37 @@ const AddPost = () => {
   });
 
   const handleUpdateProfile = (values) => {
-    const { profileImg, aboutpost } = values;
-    console.log("Form values:", values);
-    const formData = new FormData();
-    formData.append("profileImg", profileImg);
-    formData.append("aboutpost", aboutpost);
-    console.log("formData----->", formData);
+    try {
+      const { postImage, aboutpost } = values;
+      // console.log("Form values:", values);
+      const formData = new FormData();
+      formData.append("postImage", postImage);
+      formData.append("aboutpost", aboutpost);
+      // for (const entry of formData.entries()) {
+      //   console.log(entry);
+      // }
+
+      const token = localStorage.getItem("token");
+      axios
+        .post("/upload", formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          setMessage(response.message);
+          setMessage("upload post successfuly");
+          navigate("/profile");
+        })
+        .catch((error) => {
+          setError("Error updating profile", error);
+          console.log(error);
+        });
+    } catch (error) {
+      setError(error.response);
+      console.log(error);
+    }
   };
 
   return (
@@ -45,14 +73,14 @@ const AddPost = () => {
           </p>
           <Formik
             initialValues={{
-              profileImg: Profile,
+              postImage: Profile,
               aboutpost: "",
             }}
             validationSchema={validationSchema}
             onSubmit={handleUpdateProfile}
           >
             <Form className="flex flex-col items-center">
-              <Field name="profileImg">
+              <Field name="postImage">
                 {({ field, form }) => (
                   <div className="flex flex-col items-center w-full pt-4">
                     <img
@@ -66,16 +94,16 @@ const AddPost = () => {
                     />
                     <input
                       type="file"
-                      id="profileImg"
-                      name="profileImg"
+                      id="postImage"
+                      name="postImage"
                       className="bg-black/20 my-3 py-1 px-3 rounded-md border border-black text-center flex items-center gap-3 w-full max-w-52"
                       onChange={(event) => {
                         const file = event.currentTarget.files[0];
-                        form.setFieldValue("profileImg", file);
+                        form.setFieldValue("postImage", file);
                       }}
                     />
                     <ErrorMessage
-                      name="profileImg"
+                      name="postImage"
                       component="div"
                       className="text-red-500 text-sm"
                     />

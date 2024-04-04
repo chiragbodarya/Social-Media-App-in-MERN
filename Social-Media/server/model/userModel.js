@@ -33,6 +33,7 @@ const userSchema = new mongoose.Schema({
     aboutUs: {
         type: String
     },
+    posts: [{ type: ObjectId, ref: "Post" }],
     followers: [{ type: ObjectId, red: "User" }],
     following: [{ type: ObjectId, red: "User" }],
 })
