@@ -45,8 +45,11 @@ router.get('/user/:id', userProfileController.userProfileController)
 //follow user
 router.post("/follow/:id", verifyToken, profileController.followUser);
 
+// checkFollowStatus
+router.get('/checkfollowstatus/:userId', verifyToken, profileController.CheckFollowStatus);
+
 // Unfollow user
-// router.post("/Unfollow", verifyToken, profileController.unFollowUser);
+router.post("/unfollow/:id", verifyToken, profileController.unfollowUser);
 
 
 
@@ -57,15 +60,13 @@ router.post('/upload', verifyToken, uploadpost.single('postImage'), postControll
 // Get All Posts
 router.post('/getallpost/:id', postController.getAllPosts);
 
+
+
 // // Delete Post
 // router.delete('/:id', postController.deletePost);
 
-// // Edit Post
-// router.put('/:id', postController.editPost);
-
-
-// // Like Post
-// router.post('/like/:id', postController.likePost);
+// Like Post
+router.post('/like/:id', verifyToken, postController.likePost);
 
 // // Comment Post
 // router.post('/comment/:id', postController.commentPost);

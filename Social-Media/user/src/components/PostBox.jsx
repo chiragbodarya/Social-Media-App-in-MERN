@@ -8,16 +8,10 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 const PostBox = (props) => {
   const [comment, setComment] = useState(false);
   const [postMenu, setPostMenu] = useState(false);
-  const [user, setUser] = useState();
-  const [postData, setPostData] = useState();
+  const { user, postData } = props;
 
-  useEffect(() => {
-    setUser(props.user);
-    setPostData(props.postData);
-  }, [props.user, props.postData]);
-
-  console.log("postData this data is the post box", postData);
-  // console.log("postiage", postData.postImage);
+  // console.log("postData this data is the post box", postData);
+  // console.log("postiage   iddddd   ------->>>>    ", postData._id);
 
   const toggleComment = () => {
     setComment(!comment);
@@ -29,6 +23,13 @@ const PostBox = (props) => {
 
   if (!user) {
     return null;
+  }
+
+  let postImage = "";
+  if (postData && postData.postImage) {
+    postImage = postData.postImage.replace("public\\", "");
+  } else {
+    console.log("User or post image not found");
   }
 
   return (
@@ -55,15 +56,12 @@ const PostBox = (props) => {
       )}
       <div className="w-[100%] max-w-[400px] mx-auto h-[300px] md:h-[400px]">
         <img
-          src={`http://localhost:${process.env.BACKEND_PORT}/${user.profileImg}`}
+          src={`http://localhost:${process.env.BACKEND_PORT}/${postImage}`}
           alt=""
           className="w-[100%] h-[100%]"
         />
       </div>
-      <p className="mb-4">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et turpis
-        lectus.
-      </p>
+      <p className="mb-4">{postData.aboutpost}</p>
       <div className="flex gap-5 items-center">
         <button>
           <IoHeart className="text-[#ff0000] w-7 h-7" />

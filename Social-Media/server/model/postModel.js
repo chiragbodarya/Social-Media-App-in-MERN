@@ -15,6 +15,7 @@ const postSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    date: { type: Date, default: Date.now },
     likes: [
         {
             type: ObjectId,
@@ -43,7 +44,7 @@ const postSchema = new mongoose.Schema({
                     },
                     user: {
                         type: ObjectId,
-                        ref: 'User' 
+                        ref: 'User'
                     },
                     likes: [
                         {

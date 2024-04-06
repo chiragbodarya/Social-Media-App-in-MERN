@@ -3,6 +3,8 @@ const User = require('../model/userModel');
 
 
 
+
+
 const uploadPost = async (req, res) => {
     // console.log('api is colling')
     try {
@@ -32,13 +34,14 @@ const uploadPost = async (req, res) => {
 
 
 
+
 const getAllPosts = async (req, res) => {
-    console.log('api is called')
+    // console.log('api is called')
     const { id } = req.params;
-    console.log(id)
+    // console.log(id)
     try {
         const userPosts = await Post.find({ user: id })
-            .populate('user', ['name', 'postImage']);
+            .populate('user', ['name', 'postImage']).sort({ date: -1 });
         if (!userPosts) return res.status(400).json({ msg: "No User found" });
         res.status(200).json({ message: "App Post Find SuccessFuly", userPosts });
     } catch (error) {
@@ -46,6 +49,8 @@ const getAllPosts = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 }
+
+
 
 
 
@@ -60,32 +65,33 @@ const getAllPosts = async (req, res) => {
 //     }
 // };
 
-// const editPost = async (req, res) => {
-//     try {
-//         const postId = req.params.id;
-//         const { about } = req.body;
-//         const updatedPost = await Post.findByIdAndUpdate(postId, { about }, { new: true });
-//         res.json({ message: 'Post updated successfully', post: updatedPost });
-//     } catch (error) {
-//         res.status(500).json({ message: 'Failed to edit post', error: error.message });
-//     }
-// };
 
 
-// const likePost = async (req, res) => {
-//     try {
-//         const postId = req.params.id;
-//         const userId = req.user.id; // Assuming you have user authentication middleware
-//         const post = await Post.findById(postId);
-//         if (!post.likes.includes(userId)) {
-//             post.likes.push(userId);
-//             await post.save();
-//         }
-//         res.json({ message: 'Post liked successfully' });
-//     } catch (error) {
-//         res.status(500).json({ message: 'Failed to like post', error: error.message });
-//     }
-// };
+
+
+
+const likePost = async (req, res) => {
+    console.log('like post is called')
+    try {
+        const postId = req.params.id;
+        const userId = req.user.user.id;
+        console.log("postId", postId)
+        console.log("userId", userId)
+        const post = await Post.findById(postId);
+        if (!post.likes.includes(userId)) {
+            post.likes.push(userId);
+            await post.save();
+        }
+        res.json({ message: 'Post liked successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to like post', error: error.message });
+    }
+};
+
+
+
+
+
 
 // const commentPost = async (req, res) => {
 //     try {
@@ -122,8 +128,7 @@ module.exports = {
     uploadPost,
     getAllPosts,
     // deletePost,
-    // editPost,
-    // likePost,
+    likePost,
     // commentPost,
     // replyToComment
 };

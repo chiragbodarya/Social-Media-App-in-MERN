@@ -21,7 +21,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-[#DAF5F5]">
+    <div className="bg-[#DAF5F5] fixed w-[100%] z-10">
       <div className="flex justify-between items-center lg:w-[70%] mx-auto py-2 px-4 ">
         <p className="text-[22px] font-bold">
           {!!user && <span className="capitalize">{user.username}</span>}

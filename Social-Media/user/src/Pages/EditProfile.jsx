@@ -108,7 +108,7 @@ const EditProfile = () => {
 
   return (
     <>
-      <div className="bg-[#DAF5F5]">
+      <div className="bg-[#DAF5F5] fixed w-[100%] z-10 ">
         <div className="flex justify-start gap-5 items-center lg:w-[70%] mx-auto py-2 px-4 ">
           <FaChevronLeft onClick={handleClick} />
           <p className="text-[22px] font-bold">
@@ -116,7 +116,7 @@ const EditProfile = () => {
           </p>
         </div>
       </div>
-      <div className="flex justify-center items-center h-screen pb-[76px]">
+      <div className="flex justify-center items-center h-screen pb-[76px] lg:pb-5 pt-[48px]">
         <div className="w-full max-w-md">
           <p className="text-green-800 font-bold text-center">
             {!message ? "" : message}

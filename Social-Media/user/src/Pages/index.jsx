@@ -7,7 +7,7 @@ const index = () => {
   return (
     <>
       <Navbar />
-      <div className="flex justify-center items-center font-bold text-[50px] h-[95vh]">
+      <div className="flex justify-center items-center font-bold text-[50px] h-[95vh] pt-[48px]">
         <p>Hello-</p> <br />
         <p>{!!user && <p className="capitalize">{user.username}</p>}</p>
       </div>

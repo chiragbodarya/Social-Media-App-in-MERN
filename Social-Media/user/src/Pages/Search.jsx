@@ -36,7 +36,7 @@ const Search = () => {
   // console.log(results);
   return (
     <>
-      <div className=" bg-[#DAF5F5]">
+      <div className=" bg-[#DAF5F5] fixed w-[100%] z-10 ">
         <div className="flex justify-between items-center lg:w-[70%] mx-auto py-2 px-4">
           <div className="search-box w-full px-3 relative mx-auto">
             <input
@@ -55,7 +55,7 @@ const Search = () => {
         </div>
       </div>
       {results.length > 0 ? (
-        <div className="flex justify-between items-center lg:w-[70%] mx-auto py-2 px-4 pb-[76px]">
+        <div className="flex justify-between items-start lg:w-[70%] mx-auto py-2 px-4 pb-[76px] lg:pb-5 pt-[70px] min-h-[100vh]">
           <div className="w-full h-full flex flex-col items-center gap-3">
             {results.map((user) => {
               return (

@@ -63,7 +63,7 @@ const AddPost = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center h-screen px-5 pb-[76px]">
+      <div className="flex justify-center items-center h-screen px-5 pb-[76px] lg:pb-5 pt-[48px]">
         <div className="w-full max-w-md">
           <p className="text-green-800 font-bold text-center">
             {!message ? "" : message}

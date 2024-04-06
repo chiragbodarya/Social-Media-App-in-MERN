@@ -7,40 +7,39 @@ import axios from "axios";
 
 const UserProfile = () => {
   const { user } = useContext(UserContext);
-  console.log("user main page", user);
-  console.log("user id is the", user.id);
-  console.log(user);
+  // console.log("user main page", user);
+  // console.log("user id is the", user.id);
+  // console.log("user", user);
   const [postData, setPostData] = useState();
 
   useEffect(() => {
-    setTimeout(async () => {
+    const fetchPosts = async () => {
       try {
         if (user.id) {
           const response = await axios.post("/getallpost/" + user.id);
           setPostData(response.data.userPosts);
-          console.log("All posts:", response.data.userPosts);
-          console.log("All posts:", postData);
         } else {
           console.log("User ID is not available");
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
-    }, 100);
+    };
+    fetchPosts();
   }, [user.id]);
-  if (postData) {
-    console.log("postData this data is the post box 00000000000000", postData);
-    const image = postData[0].postImage;
-    console.log("postImage", image);
-  }
 
   return (
     <>
       <Navbar />
-      <div className="lg:w-8/12 lg:mx-auto pb-20">
+      <div className="lg:w-8/12 lg:mx-auto pb-20 pb-[76px] lg:pb-5 pt-[48px]">
         <FollowerBox />
         <hr className="pt-2" />
-        <PostBox user={user} postData={postData} />
+        {postData &&
+          postData.map((post, index) => (
+            <div key={index}>
+              <PostBox user={user} postData={post} />
+            </div>
+          ))}
       </div>
     </>
   );
