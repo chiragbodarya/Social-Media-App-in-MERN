@@ -64,7 +64,7 @@ const PostBox = (props) => {
       <p className="mb-4">{postData.aboutpost}</p>
       <div className="flex gap-5 items-center">
         <button>
-          <IoHeart className="text-[#ff0000] w-7 h-7" />
+          <IoHeart className="text-[#dcdcdc] w-7 h-7" />
         </button>
         <button className="text-gray-500">
           <TfiCommentAlt className="w-5 h-5" onClick={toggleComment} />

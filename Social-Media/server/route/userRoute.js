@@ -68,6 +68,9 @@ router.post('/getallpost/:id', postController.getAllPosts);
 // Like Post
 router.post('/like/:id', verifyToken, postController.likePost);
 
+// UnLike Post
+router.post('/unlike/:id', verifyToken, postController.unLikePost);
+
 // // Comment Post
 // router.post('/comment/:id', postController.commentPost);
 

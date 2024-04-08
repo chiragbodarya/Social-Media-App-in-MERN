@@ -100,7 +100,7 @@ const CheckFollowStatus = async (req, res) => {
         }
 
         const isFollowed = user.following.includes(searchUserId);
-        console.log('isFollowed', isFollowed)
+        // console.log('isFollowed', isFollowed)
         res.json({ isFollowed });
     } catch (error) {
         console.error("Error checking follow status:", error);

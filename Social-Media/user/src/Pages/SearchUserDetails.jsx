@@ -130,9 +130,11 @@ const SearchUserDetails = () => {
 
   let followers = "";
   let following = "";
-  if (user && user.followers) {
+  let post = "";
+  if (user && user.followers && postData) {
     followers = user.followers.length;
     following = user.following.length;
+    post = postData.length;
   }
 
   const handleBackClick = () => {
@@ -177,7 +179,7 @@ const SearchUserDetails = () => {
               <ul className="flex justify-center md:justify-start space-x-4 md:space-x-8 mb-2 md:mb-4">
                 <li className="flex flex-col md:flex-row items-center">
                   <span className="font-semibold text-[14px] md:text-[20px]">
-                    136
+                    {post}
                   </span>
                   <span className="text-[12px] md:text-[16px]">posts</span>
                 </li>

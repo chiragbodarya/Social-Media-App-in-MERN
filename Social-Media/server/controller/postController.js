@@ -89,6 +89,11 @@ const likePost = async (req, res) => {
 };
 
 
+const unLikePost = async (req, res) => {
+    console.log("api is called")
+}
+
+
 
 
 
@@ -129,6 +134,7 @@ module.exports = {
     getAllPosts,
     // deletePost,
     likePost,
+    unLikePost,
     // commentPost,
     // replyToComment
 };

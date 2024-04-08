@@ -1,19 +1,42 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import { Link } from "react-router-dom";
-// import axios from "axios";
+import axios from "axios";
 
 const FollowerBox = () => {
   const { user } = useContext(UserContext);
+  const [postData, setPostData] = useState();
 
   let followers = "";
   let following = "";
-  if (user && user.followers) {
+  let post = "";
+  if (user && user.followers && postData) {
     followers = user.followers.length;
     following = user.following.length;
-    // console.log("followers:", followers);
-    // console.log("following:", following);
+    post = postData.length;
   }
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        if (user.id) {
+          await axios
+            .post("/getallpost/" + user.id)
+            .then((response) => {
+              setPostData(response.data.userPosts);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          console.log("User ID is not available");
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+    fetchPosts();
+  }, [user.id]);
 
   return (
     <div>
@@ -37,7 +60,7 @@ const FollowerBox = () => {
             <ul className="flex justify-center md:justify-start space-x-4 md:space-x-8 mb-2 md:mb-4">
               <li className="flex flex-col md:flex-row items-center">
                 <span className="font-semibold text-[14px] md:text-[20px]">
-                  136
+                  {post}
                 </span>
                 <span className="text-[12px] md:text-[16px]">posts</span>
               </li>
