@@ -22,8 +22,8 @@ import Search from "./Pages/Search";
 import AddPost from "./Pages/AddPost";
 import Extera from "./Pages/Extera";
 import SearchUserDetails from "./Pages/SearchUserDetails";
-// import UserFollower from "./Pages/UserFollower";
-// import UserFollowing from "./Pages/UserFollowing";
+import UserFollower from "./Pages/UserFollower";
+import UserFollowing from "./Pages/UserFollowing";
 
 axios.defaults.baseURL = `http://localhost:${process.env.BACKEND_PORT}/`;
 
@@ -39,24 +39,22 @@ const App = () => {
   return (
     <>
       <Routes>
-        {/* <Route path="/home" element={<Home />} /> */}
-        <Route path="/search" element={<Search />} />
-        <Route path="/add-post" element={<AddPost />} />
-        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/" element={!user ? <Login /> : <Home />} />
+        <Route path="/registration/verified-email" element={<Registration />} />
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/registration" element={<Registration />} />
-        <Route path="/registration/verified-email" element={<Registration />} />
-        <Route path="/" element={!user ? <Login /> : <Home />} />
-        {/* <Route path="/login" element={<Login />} /> */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verified-otp" element={<VerifiedOtp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/change-password" element={<ChangePassword />} />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/add-post" element={<AddPost />} />
+        <Route path="/profile" element={<UserProfile />} />
         <Route path="/extera" element={<Extera />} />
         <Route path="/user/:userId" element={<SearchUserDetails />} />
-        {/* <Route path="/user/follower" element={<UserFollower />} />
-          <Route path="/user/following" element={<UserFollowing />} /> */}
+        <Route path="*" element={<NotFoundPage />} />
+        <Route path="/user/follower" element={<UserFollower />} />
+        <Route path="/user/following" element={<UserFollowing />} />
       </Routes>
       {!user ? null : <MenuBar />}
     </>

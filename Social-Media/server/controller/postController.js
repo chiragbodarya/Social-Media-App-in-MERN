@@ -34,7 +34,6 @@ const uploadPost = async (req, res) => {
 
 
 
-
 const getAllPosts = async (req, res) => {
     // console.log('api is called')
     const { id } = req.params;
@@ -54,43 +53,110 @@ const getAllPosts = async (req, res) => {
 
 
 
+const deletePost = async (req, res) => {
+    console.log('delete api is called')
+    try {
+        const postId = req.params.id;
+        const userId = req.user.user.id;
+        // console.log("postId", postId)
+        // console.log("userId", userId)
+        const post = await Post.findById(postId)
+        if (post) {
+            // console.log("post user id", post.user)
+            // console.log('post', post)
+            if (post.user == userId) {
+                await Post.findByIdAndDelete(postId);
+                res.status(200).json({ message: 'Post deleted successfully' });
+            } else {
+                res.status(404).json({ error: "you can not delete this post " })
+            }
+        } else {
+            res.status(401).json({ error: "this post is already deleted plase wait" })
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'server error', error: error.message });
+    }
+};
 
-// const deletePost = async (req, res) => {
-//     try {
-//         const postId = req.params.id;
-//         await Post.findByIdAndDelete(postId);
-//         res.json({ message: 'Post deleted successfully' });
-//     } catch (error) {
-//         res.status(500).json({ message: 'Failed to delete post', error: error.message });
-//     }
-// };
 
+
+
+
+const CheckLikePostStatus = async (req, res) => {
+    // console.log("CheckLikePostStatus api is called")
+    try {
+        const postId = req.params.id;
+        const userId = req.user.user.id;
+        // console.log("postId", postId)
+        // console.log("userId", userId)
+
+        const post = await Post.findById(postId)
+        const isLike = post.likes.includes(userId)
+        res.json({ isLike })
+        // console.log('post', post)
+    } catch (error) {
+        console.log("Error : ", error)
+    }
+}
 
 
 
 
 
 const likePost = async (req, res) => {
-    console.log('like post is called')
+    // console.log('like post is called')
     try {
         const postId = req.params.id;
         const userId = req.user.user.id;
-        console.log("postId", postId)
-        console.log("userId", userId)
+        // console.log("postId", postId)
+        // console.log("userId", userId)
         const post = await Post.findById(postId);
-        if (!post.likes.includes(userId)) {
+        const alreadyLikePostUser = post.likes.includes(userId)
+        // console.log("kadnsijnedfovnedon--------", alreadyLikePostUser)
+        if (!alreadyLikePostUser) {
             post.likes.push(userId);
             await post.save();
+            const checkUSerAlreadyLikePost = post.likes.includes(userId)
+            res.json({ message: 'Post liked successfully', checkUSerAlreadyLikePost });
+        } else {
+            const checkUSerAlreadyLikePost = post.likes.includes(userId)
+            res.json({ message: "user already like this post", checkUSerAlreadyLikePost })
         }
-        res.json({ message: 'Post liked successfully' });
+        // console.log("post", post)
     } catch (error) {
-        res.status(500).json({ message: 'Failed to like post', error: error.message });
+        res.status(500).json({ message: 'Failed to like post', error: error });
+        console.log("error", error)
     }
 };
 
 
+
+
+
 const unLikePost = async (req, res) => {
-    console.log("api is called")
+    // console.log("Un Like api is called")
+    try {
+        const postId = req.params.id;
+        const userId = req.user.user.id;
+        // console.log("postId", postId)
+        // console.log("userId", userId)
+        const post = await Post.findById(postId);
+        const alreadyunLikePostUser = post.likes.includes(userId)
+        // console.log("kadnsijnedfovnedon--------", alreadyunLikePostUser)
+        if (alreadyunLikePostUser) {
+            post.likes.pop(userId);
+            await post.save();
+            const checkUSerAlreadyunLikePost = post.likes.includes(userId)
+            res.json({ message: 'Post unliked successfully', checkUSerAlreadyunLikePost });
+        } else {
+            const checkUSerAlreadyunLikePost = post.likes.includes(userId)
+            res.json({ message: "user already unlike this post", checkUSerAlreadyunLikePost })
+        }
+        // console.log("post", post)
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to Unlike post', error: error });
+        console.log("error", error)
+    }
 }
 
 
@@ -98,43 +164,81 @@ const unLikePost = async (req, res) => {
 
 
 
-// const commentPost = async (req, res) => {
-//     try {
-//         const postId = req.params.id;
-//         const { text } = req.body;
-//         const userId = req.user.id; // Assuming you have user authentication middleware
-//         const post = await Post.findById(postId);
-//         post.comments.push({ text, user: userId });
-//         await post.save();
-//         res.status(201).json({ message: 'Comment added successfully', post });
-//     } catch (error) {
-//         res.status(500).json({ message: 'Failed to comment on post', error: error.message });
-//     }
-// };
 
-// const replyToComment = async (req, res) => {
-//     try {
-//         const postId = req.params.postId;
-//         const commentId = req.params.commentId;
-//         const { text } = req.body;
-//         const userId = req.user.id; // Assuming you have user authentication middleware
-//         const post = await Post.findById(postId);
-//         const comment = post.comments.find(comment => comment._id == commentId);
-//         comment.replies.push({ text, user: userId });
-//         await post.save();
-//         res.status(201).json({ message: 'Reply added successfully', post });
-//     } catch (error) {
-//         res.status(500).json({ message: 'Failed to reply to comment', error: error.message });
-//     }
-// };
+
+
+
+
+const commentPost = async (req, res) => {
+    console.log("comment api is called")
+    try {
+        const postId = req.params.id;
+        const { text } = req.body;
+        const userId = req.user.user.id;
+        console.log("postId", postId)
+        console.log("text", text)
+        console.log("userId", userId)
+
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(401).json({ error: "Post not found" });
+        }
+        post.comments.push({ text, user: userId });
+        await post.save();
+        const updatedPost = await Post.findById(postId).populate('comments.user');
+        res.status(200).json({ message: 'Comment added successfully', post: updatedPost })
+    } catch (error) {
+        console.error("Error adding comment:", error);
+        res.status(500).json({ error: 'Failed to comment on post', error: error.message });
+    }
+};
+
+
+
+
+
+
+const replyToComment = async (req, res) => {
+    try {
+        const { postId, commentId } = req.params;
+        const { text } = req.body;
+        const userId = req.user._id;
+
+        const post = await Post.findById(postId);
+
+        if (!post) {
+            return res.status(404).json({ error: "Post not found" });
+        }
+
+        const comment = post.comments.id(commentId);
+
+        if (!comment) {
+            return res.status(404).json({ error: "Comment not found" });
+        }
+
+        comment.replies.push({ text, user: userId });
+        await post.save();
+
+        res.status(201).json({ message: "Reply added successfully" });
+    } catch (error) {
+        console.error("Error adding reply:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+};
+
+
+
+
+
 
 
 module.exports = {
     uploadPost,
     getAllPosts,
-    // deletePost,
+    deletePost,
+    CheckLikePostStatus,
     likePost,
     unLikePost,
-    // commentPost,
-    // replyToComment
+    commentPost,
+    replyToComment
 };

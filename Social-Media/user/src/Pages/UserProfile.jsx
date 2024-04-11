@@ -28,6 +28,8 @@ const UserProfile = () => {
     fetchPosts();
   }, [user.id]);
 
+  // console.log("postId", postData[0]._id);
+
   return (
     <>
       <Navbar />

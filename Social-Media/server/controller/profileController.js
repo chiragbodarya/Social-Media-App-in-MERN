@@ -92,7 +92,6 @@ const CheckFollowStatus = async (req, res) => {
     // console.log('api is call for checkfollowstatus')
     const loggedInUserId = req.user.user.id;
     const searchUserId = req.params.userId;
-
     try {
         const user = await User.findById(loggedInUserId);
         if (!user) {
@@ -156,4 +155,49 @@ const unfollowUser = async (req, res) => {
     }
 };
 
-module.exports = { updateProfile, followUser, CheckFollowStatus, unfollowUser };
+
+
+
+
+const getFollowersData = async (req, res) => {
+    // console.log("get Foloower data api is called")
+    try {
+        const userId = req.params.id
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const followersIds = user.followers;
+        const followersusersData = await User.find({ _id: { $in: followersIds } });
+        res.status(200).json({ message: "this is all use followers user", followersusersData });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+
+
+
+const getFollowingData = async (req, res) => {
+    // console.log("get Foloowing data api is called")
+    try {
+        const userId = req.params.id
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const followingIds = user.following;
+        const followingusersData = await User.find({ _id: { $in: followingIds } });
+        res.status(200).json({ message: "this is all use following user", followingusersData });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+
+
+
+
+module.exports = { updateProfile, followUser, CheckFollowStatus, unfollowUser, getFollowersData, getFollowingData };
