@@ -34,6 +34,7 @@ const uploadPost = async (req, res) => {
 
 
 
+
 const getAllPosts = async (req, res) => {
     // console.log('api is called')
     const { id } = req.params;
@@ -48,6 +49,7 @@ const getAllPosts = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 }
+
 
 
 
@@ -82,6 +84,8 @@ const deletePost = async (req, res) => {
 
 
 
+
+
 const CheckLikePostStatus = async (req, res) => {
     // console.log("CheckLikePostStatus api is called")
     try {
@@ -98,6 +102,7 @@ const CheckLikePostStatus = async (req, res) => {
         console.log("Error : ", error)
     }
 }
+
 
 
 
@@ -162,23 +167,36 @@ const unLikePost = async (req, res) => {
 
 
 
+const getAllComment = async (req, res) => {
+    console.log("getallcomment api is called")
+    try {
+        const postId = req.params.id;
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+        const finalPost = await Post.findById(postId).populate('comments.user').populate(
+            'comments.replies.user'
+        );
 
-
-
-
+        res.json({ finalPost })
+    } catch (error) {
+        console.log("Error fetching comments: ", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
 
 
 
 const commentPost = async (req, res) => {
-    console.log("comment api is called")
+    // console.log("comment api is called")
     try {
         const postId = req.params.id;
         const { text } = req.body;
         const userId = req.user.user.id;
-        console.log("postId", postId)
-        console.log("text", text)
-        console.log("userId", userId)
-
+        // console.log("postId", postId)
+        // console.log("text", text)
+        // console.log("userId", userId)
         const post = await Post.findById(postId);
         if (!post) {
             return res.status(401).json({ error: "Post not found" });
@@ -197,35 +215,48 @@ const commentPost = async (req, res) => {
 
 
 
-
 const replyToComment = async (req, res) => {
     try {
         const { postId, commentId } = req.params;
         const { text } = req.body;
-        const userId = req.user._id;
+        const userId = req.user.user.id;
+        console.log("PostId", postId)
+        console.log("commentId", commentId)
+        console.log("text", text)
+        console.log("userId", userId)
 
         const post = await Post.findById(postId);
-
         if (!post) {
             return res.status(404).json({ error: "Post not found" });
         }
 
-        const comment = post.comments.id(commentId);
-
+        const comment = post.comments.find(comment => comment._id.toString() === commentId);
         if (!comment) {
             return res.status(404).json({ error: "Comment not found" });
         }
 
-        comment.replies.push({ text, user: userId });
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        const reply = { text, user: user._id };
+        comment.replies.push(reply);
         await post.save();
 
-        res.status(201).json({ message: "Reply added successfully" });
+        const updatedPost = await Post.findById(postId).populate({
+            path: 'comments',
+            populate: {
+                path: 'replies.user'
+            }
+        });
+
+        res.status(200).json({ message: 'Reply added successfully', post: updatedPost });
     } catch (error) {
         console.error("Error adding reply:", error);
-        res.status(500).json({ error: "Server error" });
+        res.status(500).json({ error: 'Failed to add reply to comment', errorMessage: error.message });
     }
 };
-
 
 
 
@@ -239,6 +270,7 @@ module.exports = {
     CheckLikePostStatus,
     likePost,
     unLikePost,
+    getAllComment,
     commentPost,
     replyToComment
 };

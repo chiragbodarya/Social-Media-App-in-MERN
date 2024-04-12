@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Profile from "../assets/profile-img.png";
 import { IoHeart } from "react-icons/io5";
 import { TfiCommentAlt } from "react-icons/tfi";
 import { IoSend } from "react-icons/io5";
@@ -14,13 +13,15 @@ const PostBox = (props) => {
   const [postMenu, setPostMenu] = useState(false);
   const [like, setLike] = useState();
   const [commentBox, setCommentBox] = useState(false);
-  const [newComment, setNewComment] = useState();
+  const [newComment, setNewComment] = useState("");
   const [allComment, setAllComment] = useState([]);
+  const [replyText, setReplyText] = useState("");
+  const [repliedCommentId, setRepliedCommentId] = useState(null);
 
   useEffect(() => {
     const checkUserAlredyLikePost = async () => {
       try {
-        axios
+        await axios
           .post("/check-like-post-status/" + postData._id, null, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -42,6 +43,29 @@ const PostBox = (props) => {
       }
     };
     checkUserAlredyLikePost();
+
+    const fetchPostComments = async () => {
+      try {
+        await axios
+          .get(`/getallcomment/${postData._id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            // console.log("respoksfngjondofin------------------", response);
+            // console.log("response", response);
+            // console.log("response.comments", response.updateComment);
+            setAllComment(response.data.finalPost.comments);
+          })
+          .catch((error) => {
+            console.log("Error:", error);
+          });
+      } catch (error) {
+        console.log("Error fetching comments: ", error);
+      }
+    };
+    fetchPostComments();
   }, [postData._id]);
 
   const handleLikePost = async () => {
@@ -131,27 +155,57 @@ const PostBox = (props) => {
     setCommentBox(!commentBox);
   };
 
+  const toggleReplayCommentBox = (commentId) => {
+    setRepliedCommentId(commentId === repliedCommentId ? null : commentId);
+  };
+
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
 
-  const handleAddComment = async () => {
+  const handleAddComment = async (e) => {
     console.log("call add comment function"), console.log(newComment);
     try {
+      axios
+        .post(
+          `/comment/${postData._id}`,
+          { text: newComment },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          // console.log("response.data", response.data);
+          // console.log("postData", response.data.post);
+          setAllComment(response.data.post.comments);
+        })
+        .catch((error) => {
+          console.log("Error : ", error);
+        });
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  const handleAddReply = async (postId, commentId) => {
+    try {
       const response = await axios.post(
-        `/comment/${postData._id}`,
-        { text: newComment },
+        `/posts/${postId}/comments/${commentId}/reply`,
+        { text: replyText },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log("response.data", response.data);
-      console.log("postData", response.data.post);
+      console.log("response", response);
       setAllComment(response.data.post.comments);
+      setReplyText("");
     } catch (error) {
-      console.log("Error : ", error);
+      console.error("Error adding reply:", error);
+      toast.error("Failed to add reply");
     }
   };
 
@@ -166,9 +220,17 @@ const PostBox = (props) => {
     console.log("User or post image not found");
   }
 
+  const convertToLocalhostUrl = (localPath) => {
+    const baseUrl = `http://localhost:${process.env.BACKEND_PORT}/`;
+    const forwardSlashesPath = localPath.replace(/public\\/g, "/");
+    const localhostUrl = baseUrl + forwardSlashesPath;
+    return localhostUrl;
+    return baseUrl;
+  };
+
   // console.log(postData.likes.length);
   const likes = postData.likes.length;
-  console.log(allComment);
+  console.log("allcomments", allComment);
 
   return (
     <div className="bg-white shadow-md rounded-md p-4 mb-4 mx-3 relative">
@@ -243,18 +305,69 @@ const PostBox = (props) => {
                     <div className="flex items-center">
                       <div className="rounded-full h-8 w-8 bg-gray-400 mr-2">
                         <img
-                          src={Profile}
+                          src={convertToLocalhostUrl(item.user.profileImg)}
                           alt="profile"
                           className="object-cover rounded-full "
                         />
                       </div>
-                      <span className="font-bold">John Doe</span>
+                      <span className="font-bold">{item.user.username}</span>
                     </div>
                     <button>
                       <IoHeart className="text-[#ff0000] w-4 h-4" />
                     </button>
                   </div>
-                  <p className="py-2">{item.text}</p>
+                  <p className="py-2 pl-10 flex gap-5 items-center">
+                    {item.text}
+                    <button onClick={() => toggleReplayCommentBox(item._id)}>
+                      Replay
+                    </button>
+                  </p>
+                  {repliedCommentId === item._id && (
+                    <div className="relative ml-12">
+                      <input
+                        type="text"
+                        placeholder="Add your reply..."
+                        className="px-3 py-1 border-2 rounded-lg w-[100%]"
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                      />
+                      <IoSend
+                        onClick={() => handleAddReply(postData._id, item._id)}
+                        className="absolute right-5 bottom-2"
+                      />
+                    </div>
+                  )}
+                  <div className="pl-14">
+                    {item.replies.map((reply) => (
+                      <>
+                        <div
+                          key={reply._id}
+                          className="flex items-center justify-between mb-2 pt-2"
+                        >
+                          <div className="flex items-center">
+                            <div className="rounded-full h-8 w-8 bg-gray-400 mr-2">
+                              <img
+                                src={convertToLocalhostUrl(
+                                  reply.user.profileImg
+                                )}
+                                alt="profile"
+                                className="object-cover rounded-full "
+                              />
+                            </div>
+                            <span className="font-bold">
+                              {reply.user.username}
+                            </span>
+                          </div>
+                          <button>
+                            <IoHeart className="text-[#ff0000] w-4 h-4" />
+                          </button>
+                        </div>
+                        <p className="py-2 pl-10 flex gap-5 items-center">
+                          {reply.text}
+                        </p>
+                      </>
+                    ))}
+                  </div>
                 </>
               );
             })}

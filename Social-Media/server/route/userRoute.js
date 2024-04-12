@@ -104,9 +104,12 @@ router.post('/like/:id', verifyToken, postController.likePost);
 router.post('/unlike/:id', verifyToken, postController.unLikePost);
 
 // Comment Post
+router.get('/getallcomment/:id', verifyToken, postController.getAllComment);
+
+// Comment Post
 router.post('/comment/:id', verifyToken, postController.commentPost);
 
 // Reply to Comment
-router.post('/comment/:postId/reply/:commentId', verifyToken, postController.replyToComment);
+router.post('/posts/:postId/comments/:commentId/reply', verifyToken, postController.replyToComment);
 
 module.exports = router;

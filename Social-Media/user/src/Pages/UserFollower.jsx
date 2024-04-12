@@ -30,7 +30,7 @@ const UserFollower = () => {
   }, [user.id, token]);
 
   function convertToLocalhostUrl(localPath) {
-    const baseUrl = "http://localhost:5000/";
+    const baseUrl = `http://localhost:${process.env.BACKEND_PORT}/`;
     const forwardSlashesPath = localPath.replace(/public\\/g, "/");
     const localhostUrl = baseUrl + forwardSlashesPath;
     return localhostUrl;
