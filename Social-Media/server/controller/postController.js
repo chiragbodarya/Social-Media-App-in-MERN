@@ -261,6 +261,71 @@ const replyToComment = async (req, res) => {
 
 
 
+const likeComment = async (req, res) => {
+    console.log("like comment api is called")
+    try {
+        const postId = req.params.postId;
+        const commentId = req.params.commentId;
+        const userId = req.user.id;
+
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+        const comment = post.comments.find(c => c._id.toString() === commentId);
+        if (!comment) {
+            return res.status(404).json({ message: "Comment not found" });
+        }
+
+        if (comment.likes.includes(userId)) {
+            return res.status(400).json({ message: "You have already liked this comment" });
+        }
+
+        comment.likes.push(userId);
+        await post.save();
+
+        res.json({ message: "Comment liked successfully", post });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+
+
+
+const unLikeComment = async (req, res) => {
+    try {
+        const postId = req.params.postId;
+        const commentId = req.params.commentId;
+        const userId = req.user.id;
+
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+        const comment = post.comments.find(c => c._id.toString() === commentId);
+        if (!comment) {
+            return res.status(404).json({ message: "Comment not found" });
+        }
+
+        if (!comment.likes.includes(userId)) {
+            return res.status(400).json({ message: "You have not liked this comment yet" });
+        }
+
+        comment.likes = comment.likes.filter(id => id !== userId);
+        await post.save();
+
+        res.json({ message: "Comment unliked successfully", post });
+    } catch (error) {
+        console.log("Error : ", error)
+        res.status(500).json({ message: "Server error" });
+    }
+}
+
 
 
 module.exports = {
@@ -272,5 +337,7 @@ module.exports = {
     unLikePost,
     getAllComment,
     commentPost,
-    replyToComment
+    replyToComment,
+    likeComment,
+    unLikeComment
 };

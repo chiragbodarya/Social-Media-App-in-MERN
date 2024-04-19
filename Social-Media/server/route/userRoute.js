@@ -103,13 +103,23 @@ router.post('/like/:id', verifyToken, postController.likePost);
 // UnLike Post
 router.post('/unlike/:id', verifyToken, postController.unLikePost);
 
+
 // Comment Post
 router.get('/getallcomment/:id', verifyToken, postController.getAllComment);
+
 
 // Comment Post
 router.post('/comment/:id', verifyToken, postController.commentPost);
 
+
 // Reply to Comment
 router.post('/posts/:postId/comments/:commentId/reply', verifyToken, postController.replyToComment);
+
+
+
+router.post('/like-comment/:postId/:commentId', postController.likeComment);
+
+router.post('/unlike-comment/:postId/:commentId', postController.unLikeComment);
+
 
 module.exports = router;

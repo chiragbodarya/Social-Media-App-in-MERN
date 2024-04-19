@@ -222,7 +222,7 @@ const PostBox = (props) => {
 
   const convertToLocalhostUrl = (localPath) => {
     const baseUrl = `http://localhost:${process.env.BACKEND_PORT}/`;
-    const forwardSlashesPath = localPath.replace(/public\\/g, "/");
+    const forwardSlashesPath = localPath?.replace(/public\\/g, "/");
     const localhostUrl = baseUrl + forwardSlashesPath;
     return localhostUrl;
     return baseUrl;
@@ -338,7 +338,7 @@ const PostBox = (props) => {
                     </div>
                   )}
                   <div className="pl-14">
-                    {item.replies.map((reply) => (
+                    {item?.replies.map((reply) => (
                       <>
                         <div
                           key={reply._id}
@@ -369,7 +369,7 @@ const PostBox = (props) => {
                     ))}
                   </div>
                 </>
-              );
+              );  
             })}
           </div>
           <div className="relative">
