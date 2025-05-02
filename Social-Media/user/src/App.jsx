@@ -24,6 +24,7 @@ import Extera from "./Pages/Extera";
 import SearchUserDetails from "./Pages/SearchUserDetails";
 import UserFollower from "./Pages/UserFollower";
 import UserFollowing from "./Pages/UserFollowing";
+import Message from "./Pages/Message";
 
 axios.defaults.baseURL = `http://localhost:${process.env.BACKEND_PORT}/`;
 
@@ -38,24 +39,30 @@ const App = () => {
 
   return (
     <>
-      <Routes>
-        <Route path="/" element={!user ? <Login /> : <Home />} />
-        <Route path="/registration/verified-email" element={<Registration />} />
-        <Route path="/edit-profile" element={<EditProfile />} />
-        <Route path="/registration" element={<Registration />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/verified-otp" element={<VerifiedOtp />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/change-password" element={<ChangePassword />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/add-post" element={<AddPost />} />
-        <Route path="/profile" element={<UserProfile />} />
-        <Route path="/extera" element={<Extera />} />
-        <Route path="/user/:userId" element={<SearchUserDetails />} />
-        <Route path="*" element={<NotFoundPage />} />
-        <Route path="/user/follower" element={<UserFollower />} />
-        <Route path="/user/following" element={<UserFollowing />} />
-      </Routes>
+      <div className="lg:pl-[120px]">
+        <Routes>
+          <Route path="/" element={!user ? <Login /> : <Home />} />
+          <Route
+            path="/registration/verified-email"
+            element={<Registration />}
+          />
+          <Route path="/edit-profile" element={<EditProfile />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/verified-otp" element={<VerifiedOtp />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/message" element={<Message />} />
+          <Route path="/add-post" element={<AddPost />} />
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/extera" element={<Extera />} />
+          <Route path="/user/:userId" element={<SearchUserDetails />} />
+          <Route path="*" element={<NotFoundPage />} />
+          <Route path="/user/follower" element={<UserFollower />} />
+          <Route path="/user/following" element={<UserFollowing />} />
+        </Routes>
+      </div>
       {!user ? null : <MenuBar />}
     </>
   );

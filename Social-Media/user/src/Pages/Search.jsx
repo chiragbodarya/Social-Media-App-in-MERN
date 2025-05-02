@@ -36,9 +36,9 @@ const Search = () => {
   // console.log(results);
   return (
     <>
-      <div className=" bg-[#DAF5F5] fixed w-[100%] z-10 ">
-        <div className="flex justify-between items-center lg:w-[70%] mx-auto py-2 px-4">
-          <div className="search-box w-full px-3 relative mx-auto">
+      <div className=" bg-[#DAF5F5] fixed z-10 ">
+        <div className="flex justify-between items-center lg:w-[70%] mx-auto py-2">
+          <div className="search-box w-full relative mx-auto">
             <input
               className="search-input w-full font-montserrat text-base py-2 px-12 bg-[#e6a3a3] text-gray-700 rounded-md border-none transition duration-400 focus:outline-none focus:ring-2 focus:ring-[#000000] placeholder-[#191919]"
               type="text"
@@ -76,7 +76,7 @@ const Search = () => {
           </div>
         </div>
       ) : (
-        <div className="flex justify-center items-center lg:w-[70%] mx-auto py-2 px-4 pb-[76px]">
+        <div className="flex justify-center items-center mx-auto py-2 px-4 pb-[76px] min-h-[100vh]">
           <img src={SearchImage} alt="Loding..." />
         </div>
       )}
