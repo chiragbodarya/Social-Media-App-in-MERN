@@ -29,7 +29,7 @@ const Navbar = () => {
         <IoIosSettings onClick={toggleSetting} />
       </div>
       {settingVisible && (
-        <div className="absolute min-h-[100vh] h-[100%] w-64 right-[0px] top-[0px] bg-[#85e0e0] px-4 py-3 z-10">
+        <div className="absolute min-h-[100vh] h-[100%] w-64 right-[0px] lg:right-[120px] top-[0px] bg-[#85e0e0] px-4 py-3 z-10">
           <p className="flex justify-end pb-4">
             <IoMdClose onClick={toggleSetting} />
           </p>
